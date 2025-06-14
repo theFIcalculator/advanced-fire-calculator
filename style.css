@@ -1,0 +1,180 @@
+body { font-family: 'Inter', sans-serif; }
+.input-group { margin-bottom: 1rem; }
+.input-group label { display: block; margin-bottom: 0.25rem; font-weight: 500; color: #4A5568; }
+.input-group input[type="number"], .input-group input[type="checkbox"], .input-group select, .input-group input[type="text"] {
+    padding: 0.5rem;
+    border: 1px solid #CBD5E0;
+    border-radius: 0.375rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.input-group input[type="number"], .input-group select, .input-group input[type="text"] { width: 100%; }
+.input-group input[type="checkbox"] { width: auto; margin-right: 0.5rem; vertical-align: middle;}
+.input-group input[type="number"]:focus, .input-group select:focus {
+    outline: none;
+    border-color: #4299E1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+}
+.tooltip { position: relative; display: inline-block; cursor: help; }
+.tooltip .tooltiptext {
+    visibility: hidden; width: 260px; background-color: #555; color: #fff; text-align: center; 
+    border-radius: 6px; padding: 8px; position: absolute; z-index: 10; bottom: 130%; 
+    left: 50%; margin-left: -130px; opacity: 0; transition: opacity 0.3s; 
+    font-size: 0.875rem; line-height: 1.4;
+}
+.tooltip .tooltiptext::after {
+    content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+    border-width: 5px; border-style: solid; border-color: #555 transparent transparent transparent;
+}
+.tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+.results-card {
+    background-color: #f0f9ff; border-left: 4px solid #3b82f6; padding: 1rem;
+    margin-top: 1rem; border-radius: 0.375rem; height: 100%;
+}
+.results-card h3 { color: #1e3a8a; font-size: 0.875rem; margin-bottom: 0.25rem; }
+.results-card p.value { font-size: 1.5rem; font-weight: bold; color: #1e293b; }
+.results-card p.desc { font-size: 0.75rem; color: #475569; line-height: 1.2; }
+table { width: 100%; margin-top: 1.5rem; border-collapse: collapse; }
+th, td { border: 1px solid #e2e8f0; padding: 0.5rem 0.75rem; text-align: right; font-size: 0.875rem; }
+th { background-color: #f1f5f9; font-weight: 600; color: #334155; }
+td:first-child, th:first-child { text-align: center; }
+.error-message, .warning-message {
+    padding: 0.75rem; border-radius: 0.375rem; margin-top: 1rem; margin-bottom: 1rem; text-align: left;
+}
+.error-message { color: #c53030; background-color: #fed7d7; border: 1px solid #f56565; }
+.warning-message { color: #9a3412; background-color: #ffedd5; border: 1px solid #fdba74; }
+.tab-button {
+    padding: 0.5rem 1rem; margin-right: 0.5rem; border-radius: 0.375rem 0.375rem 0 0;
+    background-color: #e2e8f0; color: #475569; font-weight: 500; cursor: pointer;
+    border: 1px solid #cbd5e0; border-bottom: none;
+}
+.tab-button.active { background-color: #fff; color: #3b82f6; border-bottom: 1px solid #fff; position: relative; top: 1px; }
+.tab-content { border: 1px solid #cbd5e0; padding: 1rem; border-radius: 0 0.375rem 0.375rem 0.375rem; background-color: #fff; }
+.input-section-title, .scenario-section-title {
+    font-size: 1.125rem; font-weight: 600; color: #374151; 
+    margin-bottom: 0.75rem; padding-bottom: 0.25rem; border-bottom: 1px solid #D1D5DB;
+}
+.section-explanation {
+    font-size: 0.9rem; color: #4b5563; margin-top: -0.5rem; margin-bottom: 1.5rem; max-width: 80ch;
+}
+.scenario-section-title { margin-top: 2rem; color: #1d4ed8; /* blue-700 */ border-bottom-color: #60a5fa; /* blue-400 */ }
+
+#retirementSimulationSection, #oneMoreYearSection, #earlyRetirementIncomeSection {
+    margin-top: 2.5rem; 
+    padding-top: 1.5rem;
+    border-top: 2px solid #60a5fa; 
+}
+
+/* Styles for D3 plot */
+.line { fill: none; stroke-width: 2.5px; } 
+.axis-label { font-size: 0.8rem; fill: #374151; } 
+.plot-title { font-size: 1.1rem; font-weight: 600; text-anchor: middle; fill: #1e3a8a; } 
+.legend-item { display: flex; align-items: center; margin-bottom: 0.3rem; font-size: 0.75rem;} 
+.legend-color-box { width: 12px; height: 12px; margin-right: 5px; display: inline-block; border-radius: 2px;}
+.grid .tick line { stroke: #e5e7eb; stroke-opacity: 0.7; shape-rendering: crispEdges; } 
+.grid path { stroke-width: 0; } 
+.axis path, .axis line { stroke: #4b5563; } 
+.axis text { fill: #4b5563; } 
+.d3-tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    background: #333;
+    color: #fff;
+    border: 0px;
+    border-radius: 4px;
+    pointer-events: none; /* to prevent flickering when mouse is over tooltip */
+    opacity: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Simulation Specific Styles */
+#simulationPlotContainer .percentile-line {
+    stroke-width: 2.5px;
+    fill: none;
+}
+#simulationPlotContainer .sim-path {
+    stroke-width: 0.5px;
+    fill: none;
+    opacity: 0.1;
+}
+.sim-results-card {
+    background-color: #eef2ff; /* indigo-50 */
+    border-left: 4px solid #6366f1; /* indigo-500 */
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 0.375rem;
+    height: 100%;
+}
+.sim-results-card h3 { color: #312e81; font-size: 0.875rem; margin-bottom: 0.25rem; }
+.sim-results-card p.value { font-size: 1.5rem; font-weight: bold; color: #1e1b4b; }
+.sim-results-card p.desc { font-size: 0.75rem; color: #4338ca; line-height: 1.2; }
+.preset-button {
+    background-color: #f3f4f6; border: 1px solid #d1d5db; padding: 0.25rem 0.5rem; font-size: 0.75rem;
+    border-radius: 0.375rem; cursor: pointer; margin-right: 0.25rem;
+}
+.preset-button:hover { background-color: #e5e7eb; }
+.radio-label {
+    display: inline-block; padding: 0.5rem 1rem; border: 1px solid #d1d5db;
+    background-color: #fff; cursor: pointer; border-radius: 0.375rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+input[type="radio"]:checked + .radio-label {
+    background-color: #4f46e5; color: white; border-color: #4f46e5;
+}
+
+.ai-output {
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+/* Modal for Export */
+.modal {
+    position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%;
+    overflow: auto; background-color: rgba(0,0,0,0.4); display: flex;
+    align-items: center; justify-content: center;
+}
+.modal-content {
+    background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888;
+    width: 80%; max-width: 700px; border-radius: 8px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+.modal-content textarea { width: 100%; min-height: 200px; margin-bottom: 1rem; font-family: monospace; font-size: 0.8rem;}
+.close-button { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+.close-button:hover, .close-button:focus { color: black; text-decoration: none; }
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .print-container, .print-container * {
+        visibility: visible;
+    }
+    .print-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+    .non-printable {
+        display: none !important;
+    }
+    .results-card, .sim-results-card {
+        border: 1px solid #ccc;
+        box-shadow: none;
+    }
+    table, th, td {
+        border: 1px solid #666;
+    }
+    h1, h2, h3, p {
+        page-break-after: avoid;
+    }
+    .page-break {
+         page-break-before: always;
+    }
+}
