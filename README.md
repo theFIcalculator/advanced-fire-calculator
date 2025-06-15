@@ -1,6 +1,6 @@
-# The FIRE Calculator
+# The FI Calculator
 
-A comprehensive Financial Independence, Retire Early (FIRE) calculator designed to help you plan your journey to financial freedom with powerful, real-world simulations.
+The FI Calculator is a comprehensive tool for planning your journey to Financial Independence, Retire Early (FIRE), with powerful, real-world simulations.
 
 ### **[➡️ View the Live Calculator Here](https://theficalculator.com)**
 
