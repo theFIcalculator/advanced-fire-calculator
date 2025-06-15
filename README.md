@@ -1,8 +1,8 @@
-# Advanced FIRE Calculator
+# The FIRE Calculator
 
 A comprehensive Financial Independence, Retire Early (FIRE) calculator designed to help you plan your journey to financial freedom with powerful, real-world simulations.
 
-### **[➡️ View the Live Calculator Here](<TODO>)**
+### **[➡️ View the Live Calculator Here](theficalculator.com)**
 
 ---
 
