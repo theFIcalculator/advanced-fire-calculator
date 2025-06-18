@@ -78,6 +78,15 @@
                 <div class="input-group"><label for="currentSavings">Current Savings Balance</label><input type="number" id="currentSavings" value="50000" step="1000"></div>
                 <div class="input-group"><label for="grossAnnualIncome">Gross Annual Income</label><input type="number" id="grossAnnualIncome" value="70000" step="1000"></div>
                 <div class="input-group">
+                    <label for="salaryIncreaseRate">
+                        Expected Annual Salary Increase (%)
+                        <span class="tooltip text-gray-400 font-normal">(?)
+                            <span class="tooltiptext">Enter the average percentage you expect your salary and savings contribution to increase by each year. A typical value is 2-4%.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="salaryIncreaseRate" value="3" step="0.5">
+                </div>
+                <div class="input-group">
                     <label for="yearlySavingsContribution">
                         Net Yearly Savings Contribution
                         <span class="tooltip text-gray-400 font-normal">(?)

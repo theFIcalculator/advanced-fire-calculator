@@ -28,6 +28,13 @@ function showTab(tabName) {
 }
 
 // This function calculates the core projection based on inputs
+/**
+ * Calculates the full financial projection, including support for Normal and Coast FIRE modes,
+ * and incorporates an annual salary/savings increase percentage.
+ * @param {object} inputs - The user's input values from the form.
+ * @param {Array} [events=[]] - An array of financial events (lump sums, recurring income/expenses).
+ * @returns {object} The projection result object or an error object.
+ */
 function calculateProjection(inputs, events = []) {
     const fireModeEl = document.getElementById('fireMode');
     const mode = fireModeEl ? fireModeEl.value : 'normal';
@@ -38,8 +45,10 @@ function calculateProjection(inputs, events = []) {
         if (el && el.value) coastTargetAge = parseInt(el.value);
     }
     
-    const { currentAge, currentSavings, yearlySavingsContribution, yearlyExpensesInRetirement, withdrawalRate: withdrawalRatePercent, preFireReturn: preFireReturnPercent, expectedInflationRate: expectedInflationRatePercent, monthlyIncomeAfterFIRE, numMonthlyRows } = inputs;
+    // Destructure all inputs, including the new salaryIncreaseRate
+    const { currentAge, currentSavings, yearlySavingsContribution, yearlyExpensesInRetirement, withdrawalRate: withdrawalRatePercent, preFireReturn: preFireReturnPercent, expectedInflationRate: expectedInflationRatePercent, monthlyIncomeAfterFIRE, numMonthlyRows, salaryIncreaseRate } = inputs;
 
+    // Basic financial calculations
     const withdrawalRate = withdrawalRatePercent / 100;
     const preFireAnnualReturn = preFireReturnPercent / 100;
     const expectedInflationRate = expectedInflationRatePercent / 100;
@@ -53,48 +62,57 @@ function calculateProjection(inputs, events = []) {
     const fireNumber = (netInitialExpensesToCoverBySavings <= 0) ? 0 : netInitialExpensesToCoverBySavings / withdrawalRate;
     const realMonthlyPreFireReturn = Math.pow((1 + preFireAnnualReturn) / (1 + expectedInflationRate), 1/12) - 1;
     
+    // Initialize variables for the projection loops
     let accumulatedSavings = currentSavings;
     let totalContributions = 0;
     const MAX_PRE_FIRE_MONTHS = 70 * 12;
     
     const annualProjectionData = [];
     const monthlyProjectionData = [];
-    const earlyRetirementPlotData = []; // Data for the new plot
+    const earlyRetirementPlotData = []; // This can be populated for other features
 
     let coastFIREAge = null;
     let coastFIREAccum = null;
     let coastFIREContribs = null;
     
+    // --- COAST FIRE MODE LOGIC ---
     if (mode === 'coast') {
-        // Coast FIRE logic remains unchanged
-        let testAge = currentAge;
-        let testSavings = currentSavings;
         let testMonth = 0;
         let found = false;
-        let contribs = 0;
-        while (testAge < coastTargetAge && !found && testMonth < MAX_PRE_FIRE_MONTHS) {
+
+        // Loop through each possible month to stop saving, until a solution is found
+        while (testMonth < MAX_PRE_FIRE_MONTHS && !found) {
             let saveMonths = testMonth;
             let saveAccum = currentSavings;
             let saveContribs = 0;
             
-            // Recalculate saving period from scratch for each test month
-            for (let m = 0; m < saveMonths; m++) {
+            // Track the growing savings contribution for this specific simulation
+            let currentYearlySavingsForSim = yearlySavingsContribution;
+
+            // 1. ACCUMULATION PHASE SIMULATION (for this testMonth)
+            for (let m = 1; m <= saveMonths; m++) {
+                // Apply salary increase at the start of each year
+                if (m > 1 && (m - 1) % 12 === 0) {
+                    currentYearlySavingsForSim *= (1 + salaryIncreaseRate);
+                }
+                const monthlySavingsForSim = currentYearlySavingsForSim / 12;
+
                 const age = currentAge + m / 12;
                 let eventCashFlow = 0;
                  if (Array.isArray(events)) {
                     events.forEach(ev => {
                         if (age >= ev.startAge && age < ev.endAge + 1/12) {
                             let monthlyAmount = (ev.type === 'income' ? ev.amount : -ev.amount);
-                            if (ev.startAge !== ev.endAge) monthlyAmount /= 12; // Distribute annual amount
+                            if (ev.startAge !== ev.endAge) monthlyAmount /= 12;
                             eventCashFlow += monthlyAmount;
                         }
                     });
                 }
-                saveAccum = saveAccum * (1 + realMonthlyPreFireReturn) + (yearlySavingsContribution / 12) + eventCashFlow;
-                saveContribs += yearlySavingsContribution / 12;
+                saveAccum = saveAccum * (1 + realMonthlyPreFireReturn) + monthlySavingsForSim + eventCashFlow;
+                saveContribs += monthlySavingsForSim;
             }
 
-            // Coast from this age to target
+            // 2. COASTING PHASE SIMULATION
             let coastAccum = saveAccum;
             for (let m = 0; m < (coastTargetAge - (currentAge + saveMonths / 12)) * 12; m++) {
                 const age = currentAge + saveMonths / 12 + m / 12;
@@ -103,7 +121,7 @@ function calculateProjection(inputs, events = []) {
                     events.forEach(ev => {
                         if (age >= ev.startAge && age < ev.endAge + 1/12) {
                             let monthlyAmount = (ev.type === 'income' ? ev.amount : -ev.amount);
-                            if (ev.startAge !== ev.endAge) monthlyAmount /= 12; // Distribute annual amount
+                            if (ev.startAge !== ev.endAge) monthlyAmount /= 12;
                             eventCashFlow += monthlyAmount;
                         }
                     });
@@ -111,20 +129,29 @@ function calculateProjection(inputs, events = []) {
                 coastAccum = coastAccum * (1 + realMonthlyPreFireReturn) + eventCashFlow;
             }
             
+            // 3. CHECK IF COASTING WAS SUCCESSFUL
             if (coastAccum >= fireNumber) {
                 coastFIREAge = currentAge + saveMonths / 12;
                 coastFIREAccum = saveAccum;
                 coastFIREContribs = saveContribs;
                 found = true;
+                
+                // 4. RUN FINAL PROJECTION TO POPULATE TABLES
                 const monthsToCoast = Math.round(saveMonths);
                 let coastProjectionSavings = currentSavings;
+                let finalCurrentYearlySavings = yearlySavingsContribution; // Reset for final table projection
                 let yearAggregates = { contributions: 0, growth: 0, startOfYearSavings: currentSavings, events: 0 };
 
                 for (let month = 1; month <= monthsToCoast; month++) {
+                     // Apply salary increase at the start of each year for the final table data
+                    if (month > 1 && (month - 1) % 12 === 0) {
+                        finalCurrentYearlySavings *= (1 + salaryIncreaseRate);
+                    }
+                    const currentMonthlySavingsContribution = finalCurrentYearlySavings / 12;
+
                     const currentMonthAge = currentAge + month / 12;
                     const startingBalanceForMonth = coastProjectionSavings;
                     const growthThisMonth = coastProjectionSavings * realMonthlyPreFireReturn;
-                    const currentMonthlySavingsContribution = yearlySavingsContribution / 12;
                     
                     let eventCashFlow = 0;
                     if (Array.isArray(events)) {
@@ -155,52 +182,41 @@ function calculateProjection(inputs, events = []) {
                         yearAggregates = { contributions: 0, growth: 0, startOfYearSavings: coastProjectionSavings, events: 0 };
                     }
                 }
-                break;
+                break; // Exit the while loop
             }
             testMonth++;
-            testAge = currentAge + testMonth / 12;
         }
     }
-
+    
+    // --- NORMAL MODE LOGIC (OR FALLBACK FROM COAST) ---
     let normalResult = null;
     if (mode === 'normal' || (mode === 'coast' && !coastFIREAge)) {
         let fireReached = (currentSavings >= fireNumber && fireNumber >= 0);
         if (fireNumber === 0 && currentSavings >= 0) fireReached = true;
+        
         let yearAggregates = { contributions: 0, growth: 0, startOfYearSavings: currentSavings, events: 0 };
         let totalMonthsToFIRE = 0;
 
-        const plotStartDate = new Date(); // Using current date as a baseline for plot
-        let fireMonth = null;
-        let fireAge = null;
-        let fireSavings = null;
-
-        // Always push the very first data point at currentAge/currentSavings before any growth/contribution
-        // (Removed: do not push to earlyRetirementPlotData)
+        // Initialize variable to track changing savings contribution
+        let currentYearlySavings = yearlySavingsContribution;
 
         if (fireReached) {
+            // No projection needed if already at FIRE.
             totalMonthsToFIRE = 0;
-            // Project until FIRE age + 5 years, continue savings contributions for the plot
-            let postFireSavings = accumulatedSavings;
-            const endAge = currentAge + 5;
-            for (let m = 1; ; m++) {
-                const age = currentAge + m / 12;
-                if (age > endAge) break;
-                const date = new Date(plotStartDate);
-                date.setMonth(plotStartDate.getMonth() + m);
-                // Use pre-FIRE return and do not add post-FIRE income after FIRE for the plot
-                // (Removed: do not push to earlyRetirementPlotData)
-                const realMonthlyPreFireReturn = Math.pow((1 + (inputs.preFireReturn / 100)) / (1 + (inputs.expectedInflationRate / 100)), 1/12) - 1;
-                postFireSavings = postFireSavings * (1 + realMonthlyPreFireReturn) + (yearlySavingsContribution / 12) - (yearlyExpensesInRetirement / 12);
-                const potentialYearlyIncome = postFireSavings * withdrawalRate;
-                // (Removed: do not push to earlyRetirementPlotData)
-                if (postFireSavings <= 0) break;
-            }
         } else {
+            // Loop through each month until FIRE is reached
             for (let month = 1; month <= MAX_PRE_FIRE_MONTHS; month++) {
+                
+                // Apply salary increase at the start of each new year of the projection
+                if (month > 1 && (month - 1) % 12 === 0) {
+                    currentYearlySavings *= (1 + salaryIncreaseRate);
+                }
+
                 const currentMonthAge = currentAge + month / 12;
-                const currentMonthlySavingsContribution = yearlySavingsContribution / 12;
+                const currentMonthlySavingsContribution = currentYearlySavings / 12;
                 const startingBalanceForMonth = accumulatedSavings;
                 const growthThisMonth = accumulatedSavings * realMonthlyPreFireReturn;
+                
                 let eventCashFlow = 0;
                 if (Array.isArray(events)) {
                     events.forEach(ev => {
@@ -217,9 +233,6 @@ function calculateProjection(inputs, events = []) {
                 yearAggregates.growth += growthThisMonth;
                 yearAggregates.events += eventCashFlow;
 
-                // *** ADDED: Populate data for the Early Retirement Income Plot ***
-                // (Removed: do not push to earlyRetirementPlotData)
-
                 if(month <= numMonthlyRows) {
                     monthlyProjectionData.push({ month, startingBalanceForMonth, currentMonthlySavingsContribution, growthThisMonth, eventCashFlow, accumulatedSavings, currentMonthAge });
                 }
@@ -233,62 +246,46 @@ function calculateProjection(inputs, events = []) {
                     yearAggregates = { contributions: 0, growth: 0, startOfYearSavings: accumulatedSavings, events: 0 };
                 }
 
+                // Check if FIRE is reached
                 if (accumulatedSavings >= fireNumber) {
                     totalMonthsToFIRE = month;
                     fireReached = true;
-                    fireMonth = month;
-                    fireAge = currentMonthAge;
-                    fireSavings = accumulatedSavings;
-                    if (month % 12 !== 0) {
+                    if (month % 12 !== 0) { // Add final partial year data if necessary
                         annualProjectionData.push({
                             year: Math.ceil(month / 12), age: currentAge + (month/12),
                             startOfYearSavings: yearAggregates.startOfYearSavings, contributions: yearAggregates.contributions,
                             growth: yearAggregates.growth, events: yearAggregates.events, endOfYearSavings: accumulatedSavings
                         });
                     }
-                    break;
-                }
-            }
-            // After FIRE is reached, project until FIRE age + 5 years, continue savings contributions for the plot
-            if (fireReached && fireMonth !== null && fireAge !== null && fireSavings !== null) {
-                let postFireSavings = fireSavings;
-                const endAge = fireAge + 5;
-                for (let m = 1; ; m++) {
-                    const age = fireAge + m / 12;
-                    if (age > endAge) break;
-                    const date = new Date(plotStartDate);
-                    date.setMonth(plotStartDate.getMonth() + fireMonth - 1 + m);
-                    // Use pre-FIRE return and do not add post-FIRE income after FIRE for the plot
-                    const realMonthlyPreFireReturn = Math.pow((1 + (inputs.preFireReturn / 100)) / (1 + (inputs.expectedInflationRate / 100)), 1/12) - 1;
-                    postFireSavings = postFireSavings * (1 + realMonthlyPreFireReturn) + (yearlySavingsContribution / 12) - (yearlyExpensesInRetirement / 12);
-                    const potentialYearlyIncome = postFireSavings * withdrawalRate;
-                    // (Removed: do not push to earlyRetirementPlotData)
-                    if (postFireSavings <= 0) break;
+                    break; // Exit the loop
                 }
             }
         }
         if (!fireReached) totalMonthsToFIRE = MAX_PRE_FIRE_MONTHS;
+        
         normalResult = {
             fireNumber, timeToFIREMonths: totalMonthsToFIRE, ageAtFIRE: currentAge + totalMonthsToFIRE / 12,
             savingsAtFIRE: accumulatedSavings, totalContributionsToFIRE: totalContributions, fireReached, 
-            annualProjectionData, monthlyProjectionData, earlyRetirementPlotData // Return the plot data
+            annualProjectionData, monthlyProjectionData, earlyRetirementPlotData
         };
     }
     
+    // --- RETURN FINAL RESULTS ---
     if (mode === 'coast' && coastFIREAge) {
         return {
             fireNumber, coastFIREAge, coastFIREAccum, coastFIREContribs, coastTargetAge, mode: 'coast', fireReached: true,
             annualProjectionData, 
-        monthlyProjectionData,
-        earlyRetirementPlotData: []
-        //annualProjectionData: [], monthlyProjectionData: [], ..earlyRetirementPlotData: []
+            monthlyProjectionData,
+            earlyRetirementPlotData: []
         };
     } else if (normalResult) {
         return normalResult;
     }
     
-    return { error: 'Could not find a solution for this mode.' };
+    // Fallback error if no solution is found (e.g., Coast FIRE not reached within max years)
+    return { error: 'Could not find a solution for this mode within the time limit (70 years).' };
 }
+
 
 
 // --- Feedback Modal Logic ---
@@ -375,6 +372,7 @@ const currentYearEl = document.getElementById('currentYear');
 const currentAgeEl = document.getElementById('currentAge');
 const currentSavingsEl = document.getElementById('currentSavings');
 const grossAnnualIncomeEl = document.getElementById('grossAnnualIncome');
+const salaryIncreaseRateEl = document.getElementById('salaryIncreaseRate'); 
 const yearlySavingsContributionEl = document.getElementById('yearlySavingsContribution');
 const yearlyExpensesInRetirementEl = document.getElementById('yearlyExpensesInRetirement');
 const withdrawalRateEl = document.getElementById('withdrawalRate');
@@ -526,6 +524,7 @@ function validateInputs(inputs, isAdvancedSim = false, isOneMoreYearSim = false)
     } else if (!isAdvancedSim) { 
         if (isNaN(inputs.currentAge) || inputs.currentAge <= 0 || inputs.currentAge > 100) errors.push("Current Age: Must be between 1 and 100.");
         if (isNaN(inputs.currentSavings) || inputs.currentSavings < 0) errors.push("Current Savings: Must be a non-negative number.");
+        if (isNaN(inputs.salaryIncreaseRate) || inputs.salaryIncreaseRate < -0.1 || inputs.salaryIncreaseRate > 0.2) errors.push("Salary Increase Rate: Must be between -10% and 20%."); 
         if (isNaN(inputs.yearlySavingsContribution) || inputs.yearlySavingsContribution < 0) errors.push("Yearly Savings Contribution: Must be a non-negative number.");
         if (inputs.grossAnnualIncome > 0 && inputs.yearlySavingsContribution > inputs.grossAnnualIncome && inputs.yearlySavingsContribution > 0) errors.push("Yearly Savings Contribution cannot exceed Gross Annual Income.");
         if (isNaN(inputs.yearlyExpensesInRetirement) || inputs.yearlyExpensesInRetirement <= 0) errors.push("Yearly Expenses in Retirement: Must be a positive number.");
@@ -562,7 +561,9 @@ function validateInputs(inputs, isAdvancedSim = false, isOneMoreYearSim = false)
 function getCurrentInputs() {
     return {
         currentAge: parseFloat(currentAgeEl.value), currentSavings: parseFloat(currentSavingsEl.value),
-        grossAnnualIncome: parseFloat(grossAnnualIncomeEl.value), yearlySavingsContribution: parseFloat(yearlySavingsContributionEl.value),
+        grossAnnualIncome: parseFloat(grossAnnualIncomeEl.value),       
+        salaryIncreaseRate: parseFloat(salaryIncreaseRateEl.value) / 100, // MODIFIED: Read and convert to decimal
+        yearlySavingsContribution: parseFloat(yearlySavingsContributionEl.value),
         yearlyExpensesInRetirement: parseFloat(yearlyExpensesInRetirementEl.value), withdrawalRate: parseFloat(withdrawalRateEl.value),
         preFireReturn: parseFloat(preFireReturnEl.value), postFireReturn: parseFloat(postFireReturnEl.value),
         expectedInflationRate: parseFloat(expectedInflationRateEl.value), monthlyIncomeAfterFIRE: parseFloat(monthlyIncomeAfterFIREEl.value),
@@ -573,6 +574,7 @@ function getCurrentInputs() {
 
 function calculateAndDisplayProjection() {
     const inputs = getCurrentInputs();
+    
     if (!validateInputs(inputs)) return;
 
     const projection = calculateProjection(inputs, events);
@@ -607,6 +609,10 @@ function calculateAndDisplayProjection() {
         compStartSavings2El.value = '';
         runEarlyRetirementComparison();
     }
+    setTimeout(() => {
+        updateWhatIfLeversDefaults();
+        updateWhatIfResult();
+    }, 150);
 }
 
 function displayMainProjection(projection, inputs) {
@@ -764,6 +770,26 @@ function populateProjectionTables(projection, inputs) {
             if (fundsDepleted) break;
         }
     }
+
+    const whatIfMonthlyIncomeEl = document.getElementById('whatIfMonthlyIncome');
+    const whatIfMonthlyIncomeValueEl = document.getElementById('whatIfMonthlyIncomeValue');
+    const whatIfSavingsEl = document.getElementById('whatIfSavings');
+    const whatIfSavingsValueEl = document.getElementById('whatIfSavingsValue');
+    const whatIfRetireExpensesEl = document.getElementById('whatIfRetireExpenses');
+    const whatIfRetireExpensesValueEl = document.getElementById('whatIfRetireExpensesValue');
+
+    if (whatIfMonthlyIncomeEl && whatIfMonthlyIncomeValueEl) {
+        whatIfMonthlyIncomeEl.value = inputs.monthlyIncomeAfterFIRE;
+        whatIfMonthlyIncomeValueEl.textContent = formatCurrency(inputs.monthlyIncomeAfterFIRE, inputs.currency);
+    }
+    if (whatIfSavingsEl && whatIfSavingsValueEl) {
+        whatIfSavingsEl.value = inputs.yearlySavingsContribution;
+        whatIfSavingsValueEl.textContent = formatCurrency(inputs.yearlySavingsContribution, inputs.currency);
+    }
+    if (whatIfRetireExpensesEl && whatIfRetireExpensesValueEl) {
+        whatIfRetireExpensesEl.value = inputs.yearlyExpensesInRetirement;
+        whatIfRetireExpensesValueEl.textContent = formatCurrency(inputs.yearlyExpensesInRetirement, inputs.currency);
+    }
 }
 function calculateOneMoreYearScenario() {
     oneMoreYearResultsContainerEl.classList.add('hidden');
@@ -780,14 +806,23 @@ function calculateOneMoreYearScenario() {
 
     if (!validateInputs(validationInputs, false, true)) return;
 
-    const yearlyContributionForOMY = (omySavingsInput !== null && !isNaN(omySavingsInput)) ? omySavingsInput : parseFloat(yearlySavingsContributionEl.value);
-    const { preFireReturn, expectedInflationRate, postFireReturn, yearlyExpensesInRetirement, withdrawalRate, monthlyIncomeAfterFIRE, currency } = getCurrentInputs();
+    // Get all current inputs, including the salary increase rate
+    const { preFireReturn, expectedInflationRate, postFireReturn, yearlyExpensesInRetirement, withdrawalRate, monthlyIncomeAfterFIRE, currency, salaryIncreaseRate } = getCurrentInputs();
+    
+    // Determine the starting savings contribution for the "one more year" period
+    let yearlyContributionForOMY = (omySavingsInput !== null && !isNaN(omySavingsInput)) ? omySavingsInput : parseFloat(yearlySavingsContributionEl.value);
+    
     const realMonthlyPreFireReturn = Math.pow((1 + preFireReturn / 100) / (1 + expectedInflationRate / 100), 1 / 12) - 1;
     
     let newPortfolioValue = calculatedSavingsAtFIRE;
-    const monthlyContributionForOMY = yearlyContributionForOMY / 12;
 
-    for (let m = 0; m < extraYears * 12; m++) {
+    // Corrected Logic: Loop for each additional month, applying salary increase annually
+    for (let m = 1; m <= extraYears * 12; m++) {
+        // Apply increase at the start of each year
+        if (m > 1 && (m - 1) % 12 === 0) {
+            yearlyContributionForOMY *= (1 + salaryIncreaseRate);
+        }
+        const monthlyContributionForOMY = yearlyContributionForOMY / 12;
         newPortfolioValue = newPortfolioValue * (1 + realMonthlyPreFireReturn) + monthlyContributionForOMY;
     }
 
@@ -820,6 +855,7 @@ function calculateOneMoreYearScenario() {
     
     oneMoreYearScenarioDataForExport = { extraYears, newPortfolioValue, newRetirementAge, newTotalSpendingPossible, deltaSpending, fundsLastUntilAge };
 }
+
 
 // --- Early Retirement Income Plot Functions ---
 function runEarlyRetirementComparison() {
@@ -1347,6 +1383,7 @@ function drawSimulationPlot(allPaths, simYears, startAge) {
 // --- Other Functions (Reset, Export) ---
 function resetForm() {
     currentAgeEl.value = "30"; currentSavingsEl.value = "50000"; grossAnnualIncomeEl.value = "70000";
+    salaryIncreaseRateEl.value = "3"; 
     yearlySavingsContributionEl.value = "15000"; yearlyExpensesInRetirementEl.value = "40000";
     monthlyIncomeAfterFIREEl.value = "0"; withdrawalRateEl.value = "4"; preFireReturnEl.value = "7";
     postFireReturnEl.value = "7"; expectedInflationRateEl.value = "3";
@@ -1398,6 +1435,12 @@ function openExportModal() {
         
         exportText += "--- Main Inputs ---\n";
         const mainInputs = getCurrentInputs();
+        // Convert salary increase back to percentage for display
+        mainInputs.salaryIncreaseRate = (mainInputs.salaryIncreaseRate * 100).toFixed(2) + '%';
+        mainInputs.withdrawalRate = mainInputs.withdrawalRate.toFixed(2) + '%';
+        mainInputs.preFireReturn = mainInputs.preFireReturn.toFixed(2) + '%';
+        mainInputs.postFireReturn = mainInputs.postFireReturn.toFixed(2) + '%';
+        mainInputs.expectedInflationRate = mainInputs.expectedInflationRate.toFixed(2) + '%';
         for (const [key, value] of Object.entries(mainInputs)) {
             exportText += `${key}: ${value}\n`;
         }
@@ -1445,6 +1488,7 @@ function openExportModal() {
         alert("An error occurred while preparing the data for export.");
     }
 }
+
 function copyExportDataToClipboard() {
     exportDataTextAreaEl.select(); 
     exportDataTextAreaEl.setSelectionRange(0, 99999); 
@@ -1549,7 +1593,6 @@ function updateModeUI() {
     coastBaristaOptionsEl.innerHTML = html;
 }
 updateModeUI();
-
 // --- Share Your Plan Feature ---
 let sharePlanButtonEl = document.getElementById('sharePlanButton');
 if (!sharePlanButtonEl) {
@@ -1557,13 +1600,32 @@ if (!sharePlanButtonEl) {
     sharePlanButtonEl.id = 'sharePlanButton';
     sharePlanButtonEl.className = 'ml-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md';
     sharePlanButtonEl.textContent = 'Share Plan';
-    printSummaryButtonEl.insertAdjacentElement('afterend', sharePlanButtonEl);
+    if(printSummaryButtonEl) printSummaryButtonEl.insertAdjacentElement('afterend', sharePlanButtonEl);
 }
 sharePlanButtonEl.addEventListener('click', function() {
     const mainInputs = getCurrentInputs();
+
+    // We get the raw value from the element for the URL, not the processed one from getCurrentInputs()
+    const salaryIncreaseRaw = salaryIncreaseRateEl.value;
+
     const mode = fireModeEl.value;
     let params = new URLSearchParams();
-    Object.entries(mainInputs).forEach(([k, v]) => params.set(k, v));
+    
+    // Manually add params to ensure correct formatting
+    params.set('currentAge', mainInputs.currentAge);
+    params.set('currentSavings', mainInputs.currentSavings);
+    params.set('grossAnnualIncome', mainInputs.grossAnnualIncome);
+    params.set('salaryIncreaseRate', salaryIncreaseRaw); // Add the raw salary increase value
+    params.set('yearlySavingsContribution', mainInputs.yearlySavingsContribution);
+    params.set('yearlyExpensesInRetirement', mainInputs.yearlyExpensesInRetirement);
+    params.set('withdrawalRate', mainInputs.withdrawalRate );
+    params.set('preFireReturn', mainInputs.preFireReturn );
+    params.set('postFireReturn', mainInputs.postFireReturn);
+    params.set('expectedInflationRate', mainInputs.expectedInflationRate);
+    params.set('monthlyIncomeAfterFIRE', mainInputs.monthlyIncomeAfterFIRE);
+    params.set('numMonthlyRows', mainInputs.numMonthlyRows);
+    params.set('currency', mainInputs.currency);
+
     params.set('mode', mode);
     if (mode === 'coast') {
         const coastTargetAgeEl = document.getElementById('coastTargetAge');
@@ -1573,11 +1635,6 @@ sharePlanButtonEl.addEventListener('click', function() {
     if (Array.isArray(events) && events.length > 0) {
         params.set('events', encodeURIComponent(JSON.stringify(events)));
     }
-
-    // Serialize What-If Levers
-    params.set('whatIfSavings', whatIfSavings.value);
-    params.set('whatIfRetireExpenses', whatIfRetireExpenses.value);
-    params.set('whatIfMonthlyIncome', whatIfMonthlyIncome.value);
 
     const url = window.location.origin + window.location.pathname + '?' + params.toString();
     
@@ -1608,7 +1665,8 @@ function tryLoadFromUrl() {
     if(params.toString().length === 0) return;
     
     let changed = false;
-    const mainFields = ['currentAge','currentSavings','grossAnnualIncome','yearlySavingsContribution','yearlyExpensesInRetirement','withdrawalRate','preFireReturn','postFireReturn','expectedInflationRate','monthlyIncomeAfterFIRE','numMonthlyRows','currency'];
+    // Updated list to include the new field
+    const mainFields = ['currentAge','currentSavings','grossAnnualIncome', 'salaryIncreaseRate', 'yearlySavingsContribution','yearlyExpensesInRetirement','withdrawalRate','preFireReturn','postFireReturn','expectedInflationRate','monthlyIncomeAfterFIRE','numMonthlyRows','currency'];
     mainFields.forEach(f => {
         if (params.has(f)) {
             const el = document.getElementById(f);
@@ -1636,45 +1694,16 @@ function tryLoadFromUrl() {
             console.error("Error parsing events from URL", e);
         }
     }
-    // Load What-If Levers from URL
-    if (params.has('whatIfSavings')) {
-        const el = document.getElementById('whatIfSavings');
-        if (el) { 
-            const urlValue = parseFloat(params.get('whatIfSavings'));
-            el.max = Math.max(el.max || 0, urlValue * 1.2);
-            el.value = urlValue;
-            changed = true; 
-        }
-    }
-    if (params.has('whatIfRetireExpenses')) {
-        const el = document.getElementById('whatIfRetireExpenses');
-        if (el) { 
-            const urlValue = parseFloat(params.get('whatIfRetireExpenses'));
-            el.max = Math.max(el.max || 0, urlValue * 1.2);
-            el.value = urlValue; 
-            changed = true; 
-        }
-    }
-    if (params.has('whatIfMonthlyIncome')) {
-        const el = document.getElementById('whatIfMonthlyIncome');
-        if (el) { 
-            const urlValue = parseFloat(params.get('whatIfMonthlyIncome'));
-            el.max = Math.max(el.max || 0, urlValue * 1.2);
-            el.value = urlValue;
-            changed = true; 
-        }
-    }
 
     if (changed) {
         // Use a short timeout to ensure UI updates before calculating
         setTimeout(() => {
-            updateWhatIfLeversDefaults();
-            updateWhatIfResult();
             calculateAndDisplayProjection();
         }, 250);
     }
 }
 tryLoadFromUrl();
+
 
 // --- What-If Levers State & Logic ---
 const whatIfLeversSection = document.getElementById('whatIfLeversSection');
@@ -1704,7 +1733,8 @@ function updateWhatIfLeversDefaults() {
     whatIfMonthlyIncome.min = 0;
     whatIfMonthlyIncome.max = Math.max(2000, mainInputs.monthlyIncomeAfterFIRE * 2, parseFloat(whatIfMonthlyIncome.value) * 1.2 || 0);
     whatIfMonthlyIncomeValue.textContent = mainInputs.monthlyIncomeAfterFIRE
-    whatIfMonthlyIncomeValue.value = mainInputs.monthlyIncomeAfterFIRE
+    whatIfMonthlyIncome.value = mainInputs.monthlyIncomeAfterFIRE;
+    
     //parseInt(whatIfMonthlyIncome.value).toLocaleString();
     //whatIfMonthlyIncomeValue.textContent = parseInt(whatIfMonthlyIncome.value).toLocaleString();
 }
@@ -1720,7 +1750,7 @@ function getWhatIfInputs() {
 }
 function updateWhatIfResult() {
     const whatIfInputs = getWhatIfInputs();
-        // FIX: Pass the 'events' array to the calculation function
+
     let result = calculateProjection(whatIfInputs, events); 
     
     if (result.error || !result) {
