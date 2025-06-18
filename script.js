@@ -785,8 +785,10 @@ function calculateOneMoreYearScenario() {
     const realMonthlyPreFireReturn = Math.pow((1 + preFireReturn / 100) / (1 + expectedInflationRate / 100), 1 / 12) - 1;
     
     let newPortfolioValue = calculatedSavingsAtFIRE;
-    for (let i = 0; i < extraYears; i++) { 
-        newPortfolioValue = newPortfolioValue * (1 + realMonthlyPreFireReturn) ** 12 + yearlyContributionForOMY - yearlyExpensesInRetirement;
+    const monthlyContributionForOMY = yearlyContributionForOMY / 12;
+
+    for (let m = 0; m < extraYears * 12; m++) {
+        newPortfolioValue = newPortfolioValue * (1 + realMonthlyPreFireReturn) + monthlyContributionForOMY;
     }
 
     const newRetirementAge = calculatedAgeAtFIRE + extraYears;
@@ -809,7 +811,9 @@ function calculateOneMoreYearScenario() {
     
     extraYearsDisplayEl.textContent = extraYears;
     omyPortfolioValueEl.textContent = formatCurrency(newPortfolioValue, currency);
-    omyRetirementAgeEl.textContent = newRetirementAge.toFixed(1);
+    const ageYears = Math.floor(newRetirementAge);
+    const ageMonths = Math.round((newRetirementAge % 1) * 12);
+    omyRetirementAgeEl.textContent = `${ageYears}y ${ageMonths}m`;
     omyIncreasedSpendingEl.innerHTML = `${formatCurrency(newTotalSpendingPossible, currency)}<br><span class='text-green-700 text-sm'>(+${formatCurrency(deltaSpending, currency)} vs. original)</span>`;
     omyFundsLastUntilEl.textContent = fundsLastUntilAge;
     oneMoreYearResultsContainerEl.classList.remove('hidden');
