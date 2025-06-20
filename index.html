@@ -55,17 +55,32 @@
         <!-- Events Timeline UI (now includes recurring incomes) -->
         <div class="mb-8 non-printable" id="eventsTimelineSection">
             <h3 class="input-section-title">Major Life Events, Lump Sums & Recurring Incomes</h3>
-            <p class="section-explanation">Add one-time, temporary, or recurring cash flows (expenses or income) that will impact your plan. Examples: college costs, inheritance, home sale, sabbatical, pensions, rental income, Social Security, or part-time work. For recurring income, use 'Income' with a start and end age.</p>
+            <p class="section-explanation">Add one-time or recurring cash flows (e.g., college costs, inheritance, pension). Important: All amounts should be entered as the total value for the year (e.g., enter $12,000 for a $1,000/month expense). For events spanning multiple years, define a start and end age.</p>
             <div id="eventsList" class="mb-4"></div>
-            <form id="addEventForm" class="flex flex-wrap gap-2 items-end">
-                <select id="eventType" class="border rounded px-2 py-1">
-                    <option value="expense">Expense</option>
-                    <option value="income">Income</option>
-                </select>
-                <input type="text" id="eventDescription" placeholder="Description" class="border rounded px-2 py-1" style="min-width:120px;">
-                <input type="number" id="eventAmount" placeholder="Amount (per year)" class="border rounded px-2 py-1" style="width:100px;">
-                <input type="number" id="eventStartAge" placeholder="Start Age" class="border rounded px-2 py-1" style="width:80px;">
-                <input type="number" id="eventEndAge" placeholder="End Age (optional)" class="border rounded px-2 py-1" style="width:120px;">
+            <form id="addEventForm" class="flex flex-wrap gap-4 items-end">
+                <div>
+                    <label for="eventType" class="block text-sm font-medium text-gray-700">Type</label>
+                    <select id="eventType" class="border rounded px-2 py-1">
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="eventDescription" class="block text-sm font-medium text-gray-700">Description</label>
+                    <input type="text" id="eventDescription" placeholder="e.g., Inheritance" class="border rounded px-2 py-1" style="min-width:120px;">
+                </div>
+                <div>
+                    <label for="eventAmount" class="block text-sm font-medium text-gray-700">Amount (per year)</label>
+                    <input type="number" id="eventAmount" placeholder="e.g., 10000" class="border rounded px-2 py-1" style="width:120px;">
+                </div>
+                <div>
+                    <label for="eventStartAge" class="block text-sm font-medium text-gray-700">Start Age</label>
+                    <input type="number" id="eventStartAge" placeholder="e.g., 50" class="border rounded px-2 py-1" style="width:100px;">
+                </div>
+                <div>
+                    <label for="eventEndAge" class="block text-sm font-medium text-gray-700">End Age (optional)</label>
+                    <input type="number" id="eventEndAge" placeholder="e.g., 55" class="border rounded px-2 py-1" style="width:100px;">
+                </div>
                 <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded">Add Event</button>
             </form>
         </div>
