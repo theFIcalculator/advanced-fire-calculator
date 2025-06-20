@@ -67,19 +67,31 @@
                 </div>
                 <div>
                     <label for="eventDescription" class="block text-sm font-medium text-gray-700">Description</label>
-                    <input type="text" id="eventDescription" placeholder="e.g., Inheritance" class="border rounded px-2 py-1" style="min-width:120px;">
+                    <input type="text" id="eventDescription" placeholder="e.g., Pension" class="border rounded px-2 py-1" style="min-width:120px;">
                 </div>
                 <div>
                     <label for="eventAmount" class="block text-sm font-medium text-gray-700">Amount (per year)</label>
-                    <input type="number" id="eventAmount" placeholder="e.g., 10000" class="border rounded px-2 py-1" style="width:120px;">
+                    <input type="number" id="eventAmount" placeholder="e.g., 20000" class="border rounded px-2 py-1" style="width:120px;">
                 </div>
                 <div>
                     <label for="eventStartAge" class="block text-sm font-medium text-gray-700">Start Age</label>
-                    <input type="number" id="eventStartAge" placeholder="e.g., 50" class="border rounded px-2 py-1" style="width:100px;">
+                    <input type="number" id="eventStartAge" placeholder="e.g., 65" class="border rounded px-2 py-1" style="width:100px;">
                 </div>
                 <div>
                     <label for="eventEndAge" class="block text-sm font-medium text-gray-700">End Age (optional)</label>
-                    <input type="number" id="eventEndAge" placeholder="e.g., 55" class="border rounded px-2 py-1" style="width:100px;">
+                    <input type="number" id="eventEndAge" placeholder="e.g., 95" class="border rounded px-2 py-1" style="width:100px;">
+                </div>
+                <div id="inflationAdjustedSection" class="hidden pt-2">
+                    <label for="eventInflationAdjusted" class="flex items-center text-sm font-medium text-gray-700">
+                        <input type="checkbox" id="eventInflationAdjusted" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                        Inflation Adjusted?
+                        <span class="tooltip text-gray-400 font-normal ml-1">(?)
+                            <span class="tooltiptext" style="width: 250px; text-align: left;">
+                                Check this box if the income will increase with inflation (like Social Security).<br><br>
+                                Leave it unchecked if the income is fixed and will not change (like most private pensions).
+                            </span>
+                        </span>
+                    </label>
                 </div>
                 <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded">Add Event</button>
             </form>

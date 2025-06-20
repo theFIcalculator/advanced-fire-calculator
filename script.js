@@ -220,9 +220,22 @@ function calculateProjection(inputs, events = []) {
                 let eventCashFlow = 0;
                 if (Array.isArray(events)) {
                     events.forEach(ev => {
-                        if (currentMonthAge >= ev.startAge && currentMonthAge < ev.endAge + 1/12) {
-                            let monthlyAmount = (ev.type === 'income' ? ev.amount : -ev.amount);
-                            if (ev.startAge !== ev.endAge) monthlyAmount /= 12;
+                        if (currentMonthAge >= ev.startAge && currentMonthAge < ev.endAge + 1 / 12) {
+                            let annualAmount = (ev.type === 'income' ? ev.amount : -ev.amount);
+                            
+                            // If the income is NOT inflation-adjusted, we must discount its value over time.
+                            if (ev.type === 'income' && !ev.isInflationAdjusted) {
+                                const yearsElapsed = (month - 1) / 12; // Years since projection start
+                                const inflationRate = expectedInflationRatePercent / 100;
+                                // Discount the nominal amount to its "real" value for this year
+                                annualAmount = annualAmount / Math.pow(1 + inflationRate, yearsElapsed);
+                            }
+                            
+                            let monthlyAmount = annualAmount;
+                            // For recurring events, use the monthly value. For one-time lump sums, use the full amount.
+                            if (ev.startAge !== ev.endAge) {
+                                monthlyAmount /= 12;
+                            }
                             eventCashFlow += monthlyAmount;
                         }
                     });
@@ -722,18 +735,37 @@ function populateProjectionTables(projection, inputs) {
     // This correctly enables the tab for both modes
     if (postFireTabButton) postFireTabButton.disabled = !fireReached;
 
-    // Existing logic for Normal Mode
-    if (fireReached && ageAtFIRE) {
-        let postFireSavings = savingsAtFIRE;
+    if (fireReached) {
+        const startAge = (projection.mode === 'coast') ? projection.coastTargetAge : ageAtFIRE;
+        let postFireSavings = (projection.mode === 'coast') ? projection.fireNumber : savingsAtFIRE;
+
         const realAnnualPostFireReturn = (1 + postFireReturn / 100) / (1 + expectedInflationRate / 100) - 1;
-        const netWithdrawal = Math.max(0, yearlyExpensesInRetirement - (monthlyIncomeAfterFIRE * 12));
+        const inflationRate = expectedInflationRate / 100;
         let fundsDepleted = false;
 
-        for (let year = 0; year < (95 - ageAtFIRE); year++) {
-            const currentAge = Math.floor(ageAtFIRE) + year;
-            if (currentAge >= 95) break;
+        for (let year = 0; year < (95 - startAge); year++) {
+            const currentAge = Math.floor(startAge) + year;
+            if (currentAge >= 95 || fundsDepleted) break;
+
             const startBalance = postFireSavings;
             const growth = startBalance * realAnnualPostFireReturn;
+
+            let incomeThisYear = 0;
+            if (Array.isArray(events)) {
+                events.forEach(ev => {
+                    if (ev.type === 'income' && currentAge >= ev.startAge && currentAge < ev.endAge) {
+                        let incomeAmount = ev.amount;
+                        // If income is NOT inflation-adjusted, discount its value
+                        if (!ev.isInflationAdjusted) {
+                            const yearsIntoRetirement = currentAge - ev.startAge;
+                            incomeAmount = ev.amount / Math.pow(1 + inflationRate, yearsIntoRetirement);
+                        }
+                        incomeThisYear += incomeAmount;
+                    }
+                });
+            }
+            
+            const netWithdrawal = Math.max(0, yearlyExpensesInRetirement - incomeThisYear);
             postFireSavings += growth - netWithdrawal;
 
             if (postFireSavings <= 0 && netWithdrawal > 0) {
@@ -741,33 +773,7 @@ function populateProjectionTables(projection, inputs) {
                 fundsDepleted = true;
             }
 
-            postFireProjectionTableBodyEl.innerHTML += `<tr><td>${year + 1}</td><td>${currentAge}</td><td>${formatCurrency(startBalance, currency)}</td><td>${formatCurrency(growth, currency)}</td><td>${formatCurrency(netWithdrawal, currency)}</td><td>${formatCurrency(monthlyIncomeAfterFIRE * 12, currency)}</td><td>${formatCurrency(postFireSavings, currency)}</td></tr>`;
-            
-            if (fundsDepleted) break;
-        }
-    } 
-    else if (projection.mode === 'coast' && projection.fireReached) {
-        // In Coast Mode, the drawdown starts at the 'coastTargetAge' with the final 'fireNumber'
-        let postFireSavings = projection.fireNumber; 
-        const realAnnualPostFireReturn = (1 + postFireReturn / 100) / (1 + expectedInflationRate / 100) - 1;
-        const netWithdrawal = Math.max(0, yearlyExpensesInRetirement - (monthlyIncomeAfterFIRE * 12));
-        let fundsDepleted = false;
-
-        for (let year = 0; year < (95 - projection.coastTargetAge); year++) {
-            const currentAge = Math.floor(projection.coastTargetAge) + year;
-            if (currentAge >= 95) break;
-            const startBalance = postFireSavings;
-            const growth = startBalance * realAnnualPostFireReturn;
-            postFireSavings += growth - netWithdrawal;
-
-            if (postFireSavings <= 0 && netWithdrawal > 0) {
-                postFireSavings = 0;
-                fundsDepleted = true;
-            }
-
-            postFireProjectionTableBodyEl.innerHTML += `<tr><td>${year + 1}</td><td>${currentAge}</td><td>${formatCurrency(startBalance, currency)}</td><td>${formatCurrency(growth, currency)}</td><td>${formatCurrency(netWithdrawal, currency)}</td><td>${formatCurrency(monthlyIncomeAfterFIRE * 12, currency)}</td><td>${formatCurrency(postFireSavings, currency)}</td></tr>`;
-            
-            if (fundsDepleted) break;
+            postFireProjectionTableBodyEl.innerHTML += `<tr><td>${year + 1}</td><td>${currentAge}</td><td>${formatCurrency(startBalance, currency)}</td><td>${formatCurrency(growth, currency)}</td><td>${formatCurrency(netWithdrawal, currency)}</td><td>${formatCurrency(incomeThisYear, currency)}</td><td>${formatCurrency(postFireSavings, currency)}</td></tr>`;
         }
     }
 
@@ -1526,7 +1532,7 @@ function renderEventsList() {
         <div class="flex items-center gap-2 mb-1 p-2 bg-gray-50 rounded">
             <span class="flex-shrink-0 px-2 py-1 rounded text-xs ${ev.type === 'income' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${ev.type.toUpperCase()}</span>
             <span class="font-medium flex-grow">${ev.description}</span>
-            <span class="flex-shrink-0">${formatCurrency(ev.amount, currencyEl.value)}/yr</span>                   <span class="flex-shrink-0 text-gray-600">Age ${ev.startAge}${ev.endAge && ev.endAge !== ev.startAge ? '–' + ev.endAge : ''}</span>
+            <span class="flex-shrink-0">${formatCurrency(ev.amount, currencyEl.value)}/yr ${ev.type === 'income' ? (ev.isInflationAdjusted ? '<span class="text-xs text-gray-500 font-normal">(Adjusted)</span>' : '<span class="text-xs text-red-600 font-normal">(Fixed)</span>') : ''}</span>
             <button class="ml-2 text-sm text-gray-400 hover:text-red-500" onclick="removeEvent(${idx})">✕</button>
         </div>
     `).join('');
@@ -1544,8 +1550,8 @@ if (addEventForm) {
         const startAge = parseFloat(eventStartAgeEl.value);
         const endAge = eventEndAgeEl.value ? parseFloat(eventEndAgeEl.value) : startAge;
         if (!description || isNaN(amount) || isNaN(startAge)) return;
-        events.push({ type, description, amount, startAge, endAge });
-        eventDescriptionEl.value = '';
+        const isInflationAdjusted = document.getElementById('eventInflationAdjusted').checked;
+        events.push({ type, description, amount, startAge, endAge, isInflationAdjusted: (type === 'income' ? isInflationAdjusted : true) }); // Expenses are always treated as "real"        eventDescriptionEl.value = '';
         eventAmountEl.value = '';
         eventStartAgeEl.value = '';
         eventEndAgeEl.value = '';
@@ -1787,4 +1793,18 @@ calculateButton.addEventListener('click', () => {
         updateWhatIfResult();
     }, 150); // Small delay to ensure main projection is calculated first
 });
+
+// --- Inflation Adjusted Checkbox Visibility ---
+const eventTypeElForInflation = document.getElementById('eventType');
+const inflationAdjustedSectionEl = document.getElementById('inflationAdjustedSection');
+
+if (eventTypeElForInflation && inflationAdjustedSectionEl) {
+    eventTypeElForInflation.addEventListener('change', function() {
+        if (this.value === 'income') {
+            inflationAdjustedSectionEl.classList.remove('hidden');
+        } else {
+            inflationAdjustedSectionEl.classList.add('hidden');
+        }
+    });
+}
 
