@@ -80,7 +80,13 @@
                     <input type="number" id="eventStartAge" placeholder="e.g., 65" class="border rounded px-2 py-1" style="width:100px;">
                 </div>
                 <div>
-                    <label for="eventEndAge" class="block text-sm font-medium text-gray-700">End Age (optional)</label>
+                    <label for="eventEndAge" class="block text-sm font-medium text-gray-700">End Age (optional)
+                        <span class="tooltip text-gray-400 font-normal">(?)
+                            <span class="tooltiptext" style="width: 250px; text-align: left;">
+                                Leave blank for a single-year event. If you enter an end age, the event will apply up to and INCLUDING that age.
+                            </span>
+                        </span>
+                    </label>
                     <input type="number" id="eventEndAge" placeholder="e.g., 95" class="border rounded px-2 py-1" style="width:100px;">
                 </div>
                 <div id="inflationAdjustedSection" class="hidden pt-2">

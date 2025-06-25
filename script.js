@@ -751,21 +751,30 @@ function populateProjectionTables(projection, inputs) {
             const growth = startBalance * realAnnualPostFireReturn;
 
             let incomeThisYear = 0;
+            let expenseEventsThisYear = 0; // Add a variable for event-based expenses
             if (Array.isArray(events)) {
                 events.forEach(ev => {
-                    if (ev.type === 'income' && currentAge >= ev.startAge && currentAge < ev.endAge) {
-                        let incomeAmount = ev.amount;
-                        // If income is NOT inflation-adjusted, discount its value
-                        if (!ev.isInflationAdjusted) {
-                            const yearsIntoRetirement = currentAge - ev.startAge;
-                            incomeAmount = ev.amount / Math.pow(1 + inflationRate, yearsIntoRetirement);
+                    // Check if the event is active for the current year
+                    if (currentAge >= ev.startAge && currentAge <= ev.endAge) {
+                        if (ev.type === 'income') {
+                            let incomeAmount = ev.amount;
+                            // If income is NOT inflation-adjusted, discount its value
+                            if (!ev.isInflationAdjusted) {
+                                const yearsIntoRetirement = currentAge - ev.startAge;
+                                incomeAmount = ev.amount / Math.pow(1 + inflationRate, yearsIntoRetirement);
+                            }
+                            incomeThisYear += incomeAmount;
+                        } else if (ev.type === 'expense') {
+                            // Add expenses to our new variable
+                            expenseEventsThisYear += ev.amount;
                         }
-                        incomeThisYear += incomeAmount;
                     }
                 });
             }
             
-            const netWithdrawal = Math.max(0, yearlyExpensesInRetirement - incomeThisYear);
+            // Factor event expenses into the total withdrawal
+            const totalYearlyExpenses = yearlyExpensesInRetirement + expenseEventsThisYear;
+            const netWithdrawal = Math.max(0, totalYearlyExpenses - incomeThisYear);
             postFireSavings += growth - netWithdrawal;
 
             if (postFireSavings <= 0 && netWithdrawal > 0) {
@@ -1550,11 +1559,26 @@ if (addEventForm) {
         const startAge = parseFloat(eventStartAgeEl.value);
         const endAge = eventEndAgeEl.value ? parseFloat(eventEndAgeEl.value) : startAge;
         if (!description || isNaN(amount) || isNaN(startAge)) return;
+
         const isInflationAdjusted = document.getElementById('eventInflationAdjusted').checked;
-        events.push({ type, description, amount, startAge, endAge, isInflationAdjusted: (type === 'income' ? isInflationAdjusted : true) }); // Expenses are always treated as "real"        eventDescriptionEl.value = '';
+
+        // Add the event object to the array
+        events.push({
+            type,
+            description,
+            amount,
+            startAge,
+            endAge,
+            isInflationAdjusted: (type === 'income' ? isInflationAdjusted : true) // Expenses are always treated as "real"
+        });
+
+        // Clear the form fields for the next entry
+        eventDescriptionEl.value = '';
         eventAmountEl.value = '';
         eventStartAgeEl.value = '';
         eventEndAgeEl.value = '';
+
+        // Update the UI
         renderEventsList();
     });
 }
