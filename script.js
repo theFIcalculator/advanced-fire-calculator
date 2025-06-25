@@ -898,17 +898,14 @@ function runEarlyRetirementComparison() {
 
         let startSavings;
         let customStartLabel = '';
-        // For Comparison 1, always use the current inputted savings as the default
-        if (idx === 0) {
-            startSavings = defaultStartSavings;
+        
+        // Unified logic for both scenarios
+        const customStartSavingsVal = scenario.startSavingsEl.value.trim();
+        if (customStartSavingsVal !== '' && !isNaN(parseFloat(customStartSavingsVal))) {
+            startSavings = parseFloat(customStartSavingsVal);
+            customStartLabel = ` (Start: ${formatCurrency(startSavings, currency)})`;
         } else {
-            const customStartSavingsVal = scenario.startSavingsEl.value.trim();
-            if (customStartSavingsVal !== '' && !isNaN(parseFloat(customStartSavingsVal))) {
-                startSavings = parseFloat(customStartSavingsVal);
-                customStartLabel = ` (Start: ${formatCurrency(startSavings, currency)})`;
-            } else {
-                startSavings = defaultStartSavings;
-            }
+            startSavings = defaultStartSavings;
         }
 
         if(scenario.label === null){
