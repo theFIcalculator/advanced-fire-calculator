@@ -625,6 +625,7 @@ function calculateAndDisplayProjection() {
     setTimeout(() => {
         updateWhatIfLeversDefaults();
         updateWhatIfResult();
+        //updateUrlParams();
     }, 150);
 }
 
@@ -698,6 +699,11 @@ function displayMainProjection(projection, inputs) {
     }
 
     resultsSection.classList.remove('hidden');
+
+    // ADD THIS: Show the donation promo
+    const donationPromo = document.getElementById('donationPromo');
+    if (donationPromo) donationPromo.classList.remove('hidden');
+
     printSummaryButtonEl.classList.remove('hidden');
     exportDataButtonEl.classList.remove('hidden');
     
@@ -1432,6 +1438,8 @@ function resetForm() {
 
     printSummaryButtonEl.classList.add('hidden');
     exportDataButtonEl.classList.add('hidden');
+    const donationPromo = document.getElementById('donationPromo');
+    if (donationPromo) donationPromo.classList.add('hidden');
     
     lastProjectionResult = null;
     lastSimulationResult = null;
@@ -1445,9 +1453,9 @@ function openExportModal() {
         exportText += "=======================\n\n";
         const currency = currencyEl.value;
         
+        // This part remains the same, providing a summary of inputs.
         exportText += "--- Main Inputs ---\n";
         const mainInputs = getCurrentInputs();
-        // Convert salary increase back to percentage for display
         mainInputs.salaryIncreaseRate = (mainInputs.salaryIncreaseRate * 100).toFixed(2) + '%';
         mainInputs.withdrawalRate = mainInputs.withdrawalRate.toFixed(2) + '%';
         mainInputs.preFireReturn = mainInputs.preFireReturn.toFixed(2) + '%';
@@ -1468,30 +1476,40 @@ function openExportModal() {
         }
         exportText += "\n";
         
-        if (oneMoreYearScenarioDataForExport) {
-            const data = oneMoreYearScenarioDataForExport;
-            exportText += `--- "One More Year" Scenario ---\n`;
-            exportText += `Extra Working Years: ${data.extraYears}\n`;
-            exportText += `New Portfolio Value: ${formatCurrency(data.newPortfolioValue, currency)}\n`;
-            exportText += `New Retirement Age: ${data.newRetirementAge.toFixed(1)}\n\n`;
+        // --- NEW: Excel Export Section ---
+        // This part generates the two-row format for easy pasting into Excel.
+        if (lastProjectionResult && lastProjectionResult.monthlyProjectionData && lastProjectionResult.monthlyProjectionData.length > 0) {
+            exportText += "--- Monthly Projection (for Excel) ---\n";
+            exportText += "Copy the two rows below and paste them into your spreadsheet.\n\n";
+
+            // Helper function to format dates like '01 Jan 2025'
+            const formatExcelDate = (date) => {
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                const day = String(date.getDate()).padStart(2, '0');
+                const monthName = months[date.getMonth()];
+                const year = date.getFullYear();
+                return `${day} ${monthName} ${year}`;
+            };
+
+            let dateRow = "Date";
+            let amountRow = "Projected Savings";
+
+            // Loop through the detailed monthly data to build the two rows
+            lastProjectionResult.monthlyProjectionData.forEach(data => {
+                const projDate = new Date();
+                // Set to the 1st of the month for clean formatting
+                projDate.setDate(1); 
+                projDate.setMonth(projDate.getMonth() + data.month - 1);
+
+                // Append data separated by tabs (\t), which Excel understands as columns
+                dateRow += `\t${formatExcelDate(projDate)}`;
+                // Using toFixed(0) to get a clean number without currency symbols
+                amountRow += `\t${data.accumulatedSavings.toFixed(0)}`;
+            });
+            
+            exportText += dateRow + "\n" + amountRow;
         }
 
-        if (lastSimulationResult) {
-            const data = lastSimulationResult;
-            exportText += `--- Advanced Retirement Simulation (${data.simType === 'monteCarlo' ? 'Monte Carlo' : 'Historical Cycles'}) ---\n`;
-            exportText += `Portfolio Simulated: ${formatCurrency(data.simPortfolioValue, currency)} at age ${data.simRetirementAge}\n`;
-            if (data.simType === 'monteCarlo') {
-                exportText += `Avg. Return: ${data.simReturn}%, Volatility (Std. Dev): ${data.simVolatility}%, Simulations: ${data.simCount}\n`;
-            } else {
-                exportText += `Stock/Bond Allocation: ${data.stockAllocation * 100}% / ${(1-data.stockAllocation)*100}%\n`;
-            }
-            exportText += `Spending Flexibility: Reduce by ${data.flexReduction * 100}% if portfolio drops ${data.flexThreshold * 100}% below initial value.\n`;
-            exportText += `Success Rate: ${data.successRate.toFixed(1)}%\n`;
-            exportText += `Median Final Value (Age 95): ${formatCurrency(data.medianValue, currency)}\n`;
-            exportText += `10th Percentile Final Value (Age 95): ${formatCurrency(data.p10Value, currency)}\n`;
-            exportText += `90th Percentile Final Value (Age 95): ${formatCurrency(data.p90Value, currency)}\n`;
-            exportText += `Median Years with Reduced Spending: ${data.medianFlexYears} yrs\n\n`;
-        }
 
         exportDataTextAreaEl.value = exportText;
         exportModalEl.classList.remove('hidden');
@@ -1775,6 +1793,25 @@ function getWhatIfInputs() {
         monthlyIncomeAfterFIRE: parseFloat(whatIfMonthlyIncome.value)
     };
 }
+function updateUrlParams() {
+    const mainInputs = getCurrentInputs();
+    const params = new URLSearchParams();
+
+    // Add all inputs to params
+    for (const [key, value] of Object.entries(mainInputs)) {
+        params.set(key, value);
+    }
+
+    // Handle events serialization if they exist
+    if (typeof events !== 'undefined' && Array.isArray(events) && events.length > 0) {
+        params.set('events', encodeURIComponent(JSON.stringify(events)));
+    }
+
+    // Update the browser URL without reloading
+    const newUrl = window.location.pathname + '?' + params.toString();
+    window.history.replaceState({}, '', newUrl);
+}
+
 function updateWhatIfResult() {
     const whatIfInputs = getWhatIfInputs();
 
@@ -1829,3 +1866,128 @@ if (eventTypeElForInflation && inflationAdjustedSectionEl) {
     });
 }
 
+
+// --- Advanced Time-Cost Translator Logic (Date Based) ---
+const calcTimeCostBtn = document.getElementById('calcTimeCostBtn');
+const timeCostResult = document.getElementById('timeCostResult');
+const timeCostValue = document.getElementById('timeCostValue');
+const purchaseStartDateInput = document.getElementById('purchaseStartDate');
+
+// Initialize Date Input with Current Month (YYYY-MM)
+if (purchaseStartDateInput) {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    purchaseStartDateInput.value = `${yyyy}-${mm}`;
+}
+
+if (calcTimeCostBtn) {
+    calcTimeCostBtn.addEventListener('click', () => {
+        const price = parseFloat(document.getElementById('purchasePrice').value);
+        if (isNaN(price) || price <= 0) {
+            alert("Please enter a valid price.");
+            return;
+        }
+
+        const freq = document.getElementById('purchaseFreq').value;
+        const inputs = getCurrentInputs();
+        
+        // --- Date to Age Conversion Logic ---
+        const today = new Date();
+        // Default to today if empty
+        const dateVal = purchaseStartDateInput.value || `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+        
+        const [selYear, selMonth] = dateVal.split('-').map(Number);
+        
+        // Calculate difference in years (decimal)
+        const currentTotalMonths = (today.getFullYear() * 12) + today.getMonth();
+        const selectedTotalMonths = (selYear * 12) + (selMonth - 1); // Month is 1-based in value, 0-based in JS
+        
+        let yearsDiff = (selectedTotalMonths - currentTotalMonths) / 12;
+        if (yearsDiff < 0) yearsDiff = 0; // Prevent past dates
+        
+        const startAge = inputs.currentAge + yearsDiff;
+        // -------------------------------------
+
+        // 1. Run Baseline Projection
+        const baselineProj = calculateProjection(inputs, events);
+        
+        if (!baselineProj.fireReached) {
+            alert("You need to be on track to FIRE first (Baseline not reached).");
+            return;
+        }
+
+        // 2. Prepare Impact Scenario
+        let impactInputs = { ...inputs };
+        let impactEvents = Array.isArray(events) ? [...events] : [];
+
+        // 3. Logic: How to apply the cost
+        if (freq === 'once') {
+            // If the start age is effectively "now" (or very close), reduce savings
+            if (yearsDiff < 0.08) { // Less than 1 month diff
+                impactInputs.currentSavings = Math.max(0, impactInputs.currentSavings - price);
+            } else {
+                // Future One-Time Expense
+                impactEvents.push({
+                    type: 'expense',
+                    description: 'Time-Cost Scenario',
+                    amount: price,
+                    startAge: startAge,
+                    endAge: startAge,
+                    isInflationAdjusted: true 
+                });
+            }
+        } else {
+            // Recurring Habits
+            let annualAmount = 0;
+            if (freq === 'daily') annualAmount = price * 365.25;
+            else if (freq === 'weekly') annualAmount = price * 52.14;
+            else if (freq === 'monthly') annualAmount = price * 12;
+            else if (freq === 'yearly') annualAmount = price;
+
+            impactEvents.push({
+                type: 'expense',
+                description: 'Time-Cost Habit',
+                amount: annualAmount,
+                startAge: startAge,
+                endAge: 95, // Habit persists
+                isInflationAdjusted: true
+            });
+        }
+
+        // 4. Run Impact Projection
+        const impactProj = calculateProjection(impactInputs, impactEvents);
+
+        // 5. Display Delta
+        const baselineMonths = baselineProj.timeToFIREMonths;
+        let impactMonths = impactProj.timeToFIREMonths;
+
+        if (!impactProj.fireReached) {
+            timeCostValue.textContent = "Forever";
+            timeCostResult.classList.remove('hidden');
+            return;
+        }
+
+        const diffMonths = impactMonths - baselineMonths;
+        let resultText = "";
+
+        if (diffMonths <= 0) {
+            resultText = "No Delay";
+        } else if (diffMonths < 12) {
+            resultText = `${diffMonths.toFixed(1)} Months`;
+        } else {
+            const years = Math.floor(diffMonths / 12);
+            const months = (diffMonths % 12).toFixed(0);
+            if (months === "0") {
+                resultText = `${years} Year${years > 1 ? 's' : ''}`;
+            } else {
+                resultText = `${years} Yr, ${months} Mo`;
+            }
+        }
+
+        timeCostValue.textContent = resultText;
+        timeCostResult.classList.remove('hidden');
+        timeCostResult.classList.add('animate-pulse');
+        setTimeout(() => timeCostResult.classList.remove('animate-pulse'), 500);
+    });
+}

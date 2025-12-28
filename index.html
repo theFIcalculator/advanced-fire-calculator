@@ -19,6 +19,7 @@
     
         <link rel="icon" type="image/png" href="/favicon.png">
     
+        
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://d3js.org/d3.v7.min.js"></script>
         <script src="script.js" defer></script>
@@ -236,6 +237,84 @@
                 <div class="results-card"><h3>Savings at FIRE</h3><p id="savingsAtFIREResult" class="value"></p><p class="desc">Projected savings when FIRE is reached.</p></div>
                 <div class="results-card hidden" id="coastNumberCard"><h3>Coast FIRE Number</h3><p id="coastNumberResult" class="value"></p><p class="desc">Amount needed at Coast Age to reach FIRE by Target Age with no further savings.</p></div>
             </div>
+<div class="space-y-6 mt-8 mb-12 non-printable">
+
+<div id="timeCostWidget" class="bg-gradient-to-r from-indigo-50 to-white border border-indigo-100 rounded-xl p-6 shadow-sm">
+    <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+        <div class="flex-grow w-full lg:w-auto">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="p-1.5 bg-indigo-100 rounded-lg text-indigo-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800">The "Time-Cost" Translator</h3>
+            </div>
+            <p class="text-gray-600 text-sm mb-5 ml-1">
+                See how "small" habits or "big" purchases delay your freedom.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-3 mb-3">
+                <div class="relative flex-grow">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🛒</span>
+                    <input type="text" id="purchaseName" placeholder="e.g. Daily Starbucks" class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                </div>
+                <div class="relative w-full sm:w-40">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-semibold">$</span>
+                    <input type="number" id="purchasePrice" placeholder="Price" class="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <select id="purchaseFreq" class="w-full sm:w-1/3 py-2 px-3 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                    <option value="once">One-Time Purchase</option>
+                    <option value="daily">Daily Habit</option>
+                    <option value="weekly">Weekly Habit</option>
+                    <option value="monthly">Monthly Subscription</option>
+                    <option value="yearly">Yearly Recurring</option>
+                </select>
+                
+                <div class="relative w-full sm:w-1/3">
+                    <input type="month" id="purchaseStartDate" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 shadow-sm text-gray-600">
+                </div>
+
+                <button id="calcTimeCostBtn" class="w-full sm:w-1/3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-all text-sm">
+                    Check Impact
+                </button>
+            </div>
+        </div>
+        
+        <div id="timeCostResult" class="hidden shrink-0 bg-white border border-indigo-100 p-5 rounded-xl shadow-md text-center min-w-[220px] transform transition-all">
+            <span class="block text-xs text-gray-500 uppercase tracking-wider font-bold mb-1">This costs you</span>
+            <span id="timeCostValue" class="block text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500 my-1">--</span>
+            <span class="block text-xs text-gray-400 font-medium">of extra working time</span>
+        </div>
+    </div>
+</div>
+    <div id="donationPromo" class="bg-amber-50 border border-amber-200 rounded-xl p-5 shadow-sm">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-start gap-4">
+                <div class="shrink-0 p-3 bg-white rounded-full text-amber-500 shadow-sm ring-1 ring-amber-100 hidden sm:block">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-gray-900">
+                        Keep this tool free & fast
+                    </h3>
+                    <p class="text-gray-600 text-sm mt-1 leading-relaxed max-w-2xl">
+                        I built this to be the most accurate FIRE calculator on the web. If it helped you plan your future today, consider buying me a coffee to help cover the server costs.
+                    </p>
+                </div>
+            </div>
+            <a href="https://www.buymeacoffee.com/theficalculator" target="_blank" class="w-full md:w-auto shrink-0 bg-[#FFDD00] hover:bg-[#FFEA00] text-black font-bold py-3 px-6 rounded-lg shadow-sm hover:shadow-md transition-all flex items-center justify-center text-sm border border-yellow-400">
+                <span>Buy me a coffee</span>
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
+        </div>
+    </div>
+
+</div>
+        <div class="mt-8">
             <!-- Tabbed Projections -->
             <div class="mt-8">
                 <div class="flex border-b border-gray-300 non-printable">
