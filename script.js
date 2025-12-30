@@ -1991,3 +1991,50 @@ if (calcTimeCostBtn) {
         setTimeout(() => timeCostResult.classList.remove('animate-pulse'), 500);
     });
 }
+
+// --- Sticky Nav Logic ---
+const stickyNav = document.getElementById('stickyNav');
+// We do NOT redefine 'calculateButton' here because it exists globally at the top of your file.
+
+if (stickyNav && calculateButton) {
+    window.addEventListener('scroll', () => {
+        // Show nav only after user scrolls past the Calculate button
+        const triggerPoint = calculateButton.getBoundingClientRect().bottom;
+        
+        if (triggerPoint < 0) {
+            stickyNav.classList.remove('hidden');
+            // Small delay to allow display:block to apply before opacity transition
+            requestAnimationFrame(() => {
+                stickyNav.classList.remove('-translate-y-full', 'opacity-0');
+            });
+        } else {
+            stickyNav.classList.add('-translate-y-full', 'opacity-0');
+            // Wait for transition to finish before hiding
+            setTimeout(() => {
+                if (calculateButton.getBoundingClientRect().bottom >= 0) {
+                    stickyNav.classList.add('hidden');
+                }
+            }, 300);
+        }
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('#stickyNav a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetEl = document.querySelector(targetId);
+            if (targetEl) {
+                // Offset for the sticky header height
+                const headerOffset = 60; 
+                const elementPosition = targetEl.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        });
+    });
+}
