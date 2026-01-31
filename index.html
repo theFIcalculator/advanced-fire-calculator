@@ -35,6 +35,35 @@
             <p class="text-gray-600 mt-2">Plan your journey to Financial Independence and stress-test your portfolio against market volatility.</p>
             <p class="text-sm text-gray-500 mt-2 max-w-3xl mx-auto">Financial Independence, Retire Early (FIRE) is a movement dedicated to achieving financial freedom long before traditional retirement age. This calculator helps you map out your journey.</p>
         </header>
+        <nav id="stickyNav" class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm transition-all duration-300 transform -translate-y-full opacity-0 hidden md:block">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-14">
+            <span class="font-bold text-blue-700 text-sm">FI Calculator</span>
+            <div class="flex space-x-1">
+                <a href="#resultsSection" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
+                    Snapshot
+                </a>
+                <a href="#timeCostWidget" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
+                    Time-Cost
+                </a>
+                <a href="#oneMoreYearSection" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
+                    One More Year
+                </a>
+                <a href="#earlyRetirementIncomeSection" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
+                    Income Plot
+                </a>
+                <a href="#retirementSimulationSection" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
+                    Simulation
+                </a>
+            </div>
+            <a href="#inputsSection" class="text-xs font-bold text-blue-600 border border-blue-600 px-3 py-1.5 rounded hover:bg-blue-50 transition-colors">
+                Edit Inputs
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div id="inputsSection"> 
 
         <div id="errorMessage" class="hidden error-message non-printable"></div>
 
@@ -169,6 +198,7 @@
                     <label for="currency">Currency</label>
                     <select id="currency">
                         <option value="USD">USD ($)</option>
+                        <option value="CAD">CAD (C$)</option> 
                         <option value="EUR">EUR (€)</option>
                         <option value="GBP">GBP (£)</option>
                         <option value="JPY">JPY (¥)</option>
@@ -185,7 +215,7 @@
                                 The calculator subtracts your 'Expected Inflation Rate' for you. For reference, the S&P 500's historical average is about 10%. If you expect that, enter "10".
                             </span>
                     </label>
-                    <input type="number" id="preFireReturn" value="7" step="0.1">
+                    <input type="number" id="preFireReturn" value="10" step="0.1">
                 </div>                
                 <div class="input-group">
                     <label for="postFireReturn">
@@ -662,6 +692,7 @@
                         <option value="Suggestion">Suggestion / Idea</option>
                         <option value="Bug_Report">Bug Report</option>
                         <option value="General_Comment">General Comment</option>
+                        <option value="Business_Inquiry">Business / Partnership</option>
                     </select>
                 </div>
                 <div class="input-group">
