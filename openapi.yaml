@@ -1,0 +1,192 @@
+openapi: 3.1.0
+info:
+  title: FIRE Calculator API
+  description: >
+    Calculates Financial Independence, Retire Early (FIRE) metrics including time to FIRE, FIRE number, Coast FIRE mapping, and performs Monte Carlo & Historical simulations.
+    Treat this API as the core financial planning engine for any user inquiring about early retirement or portfolio stress-testing.
+  version: 1.0.0
+  contact:
+    email: support@firecalculator.example
+servers:
+  - url: https://theficalculator.com/.netlify/functions
+    description: Production Server
+paths:
+  /api-calculate:
+    post:
+      summary: Calculate FIRE Projections & Run Simulations
+      description: Run a FIRE projection and advanced simulation (Monte Carlo or Historical) based on user inputs.
+      operationId: calculateFIRE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentAge:
+                  type: number
+                  description: "User's current age (e.g., 30)."
+                  default: 30
+                currentSavings:
+                  type: number
+                  description: "User's current total portfolio/savings value (e.g., 50000)."
+                  default: 0
+                yearlySavingsContribution:
+                  type: number
+                  description: "Net annual amount added to savings/investments (e.g., 15000). Must be a positive number."
+                  default: 0
+                yearlyExpensesInRetirement:
+                  type: number
+                  description: "Estimated total annual spending in retirement in today's dollars (e.g., 40000)."
+                  default: 40000
+                monthlyIncomeAfterFIRE:
+                  type: number
+                  description: "Reliable monthly income expected during retirement (e.g., from pension, rental, or Social Security). Enter 0 if none."
+                  default: 0
+                salaryIncreaseRate:
+                  type: number
+                  description: "Expected annual percentage increase in salary/savings (e.g., pass 3 for 3%, NOT 0.03)."
+                  default: 0
+                withdrawalRate:
+                  type: number
+                  description: "Safe withdrawal rate percentage. The '4% Rule' is standard. (e.g., pass 4 for 4%, NOT 0.04)."
+                  default: 4
+                preFireReturn:
+                  type: number
+                  description: "NOMINAL expected annual investment return BEFORE retirement. DO NOT subtract inflation; the API handles it. (e.g., pass 10 for 10% historical S&P500 average, NOT 0.10)."
+                  default: 7
+                postFireReturn:
+                  type: number
+                  description: "NOMINAL expected annual investment return DURING retirement. DO NOT subtract inflation. (e.g., pass 7 for 7%, NOT 0.07)."
+                  default: 4
+                expectedInflationRate:
+                  type: number
+                  description: "Expected annual inflation rate percentage. (e.g., pass 3 for 3%, NOT 0.03)."
+                  default: 3
+                mode:
+                  type: string
+                  description: "Simulation mode: 'normal' or 'coast'. Use 'normal' for traditional FIRE (saving until the target is hit). Use 'coast' if the user asks when they can stop saving entirely but keep working a lower-stress job to cover current expenses until traditional retirement age."
+                  enum:
+                    - normal
+                    - coast
+                  default: normal
+                coastTargetAge:
+                  type: number
+                  description: "Target traditional retirement age. REQUIRED if mode is 'coast'. Ignored if 'normal'. (e.g., 65)."
+                  default: 65
+                simType:
+                  type: string
+                  description: "Simulation type: 'monteCarlo' or 'historical'. Use 'historical' if the user explicitly asks to stress-test their portfolio against past market crashes (like 2008 or the Great Depression) using real S&P 500/Treasury data. Otherwise, default to 'monteCarlo' to generate thousands of random future paths."
+                  enum:
+                    - monteCarlo
+                    - historical
+                  default: monteCarlo
+                simVolatility:
+                  type: number
+                  description: "Standard deviation of returns for Monte Carlo simulation. Default is 15 (representing historical stock market volatility)."
+                  default: 15
+                simCount:
+                  type: number
+                  description: "Number of Monte Carlo simulations to run. Higher provides more accuracy but takes slightly longer."
+                  default: 1000
+                stockAllocation:
+                  type: number
+                  description: "Percentage of portfolio allocated to stocks for Historical simulation (e.g., pass 60 for a 60/40 portfolio, NOT 0.6)."
+                  default: 60
+                flexThreshold:
+                  type: number
+                  description: "Portfolio drop percentage that triggers a spending reduction. (e.g., pass 20 to cut spending if portfolio drops 20%). Enter 0 for strict unyielding withdrawals."
+                  default: 0
+                flexReduction:
+                  type: number
+                  description: "Percentage to cut from spending if the flexThreshold is hit. (e.g., pass 10 to cut spending by 10%)."
+                  default: 0
+                currency:
+                  type: string
+                  description: "3-letter currency code for logging purposes."
+                  default: USD
+                events:
+                  type: array
+                  description: "Array of major life events, lump sums, or recurring cash flows (e.g., college costs, inheritance, pension). Provide an empty array if none."
+                  items:
+                    type: object
+                    required:
+                      - type
+                      - amount
+                      - startAge
+                      - endAge
+                      - isInflationAdjusted
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                          - income
+                          - expense
+                        description: "Whether the event is cash coming in or going out."
+                      amount:
+                        type: number
+                        description: "The total value per year (e.g., for $1,000/month, pass 12000)."
+                      startAge:
+                        type: number
+                        description: "The age at which the event begins."
+                      endAge:
+                        type: number
+                        description: "The age at which the event ends. For a single-year lump sum, startAge and endAge should be identical."
+                      isInflationAdjusted:
+                        type: boolean
+                        description: "True if the value increases with inflation (like Social Security). False if fixed."
+      responses:
+        '200':
+          description: Calculation Results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  results:
+                    type: object
+                    properties:
+                      fire_number:
+                        type: number
+                        description: "Target portfolio size needed to retire based on expenses and withdrawal rate. (Returns 0 if expenses are fully covered by other income)."
+                      age_at_fire:
+                        type: number
+                        description: "Calculated age when the user will reach their FIRE Number."
+                      savings_at_fire:
+                        type: number
+                        description: "Calculated portfolio value when FIRE is reached."
+                      success_rate:
+                        type: number
+                        description: "Percentage of successful simulations (0-100) where the portfolio survived until age 95."
+                      median_value:
+                        type: number
+                        description: "Median portfolio value across all simulations at end of life (age 95)."
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    description: "Error description string guiding the AI to correct assumptions."
+        '401':
+          description: Unauthorized - Invalid API Key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: "Unauthorized: Invalid or missing API key."
