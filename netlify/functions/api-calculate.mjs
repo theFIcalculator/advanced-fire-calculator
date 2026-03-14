@@ -244,9 +244,33 @@ function calculateProjection(inputs, events = []) {
 // Ensure CORS headers for AI Agents
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Access-Control-Allow-Methods': 'POST, OPTIONS'
 };
+
+// --- IN-MEMORY DATABASE CIRCUIT BREAKER ---
+// This state persists as long as the Netlify function container stays "warm".
+let dbWriteCount = 0;
+let lastResetTime = Date.now();
+// 60 inserts per minute per container is generous for organic usage, 
+// but it absolutely crushes any scraper trying to spam 10,000 requests/sec.
+const MAX_DB_WRITES_PER_MINUTE = 60; 
+
+function shouldWriteToDatabase() {
+    const now = Date.now();
+    // Reset counter every 60 seconds (60,000 ms)
+    if (now - lastResetTime > 60000) {
+        dbWriteCount = 0;
+        lastResetTime = now;
+    }
+    
+    if (dbWriteCount < MAX_DB_WRITES_PER_MINUTE) {
+        dbWriteCount++;
+        return true;
+    }
+    return false; // Circuit breaker tripped! Database is protected.
+}
+// ------------------------------------------
 
 export default async (req) => {
     if (req.method === 'OPTIONS') {
@@ -255,6 +279,30 @@ export default async (req) => {
     if (req.method !== "POST") {
         return new Response("Forbidden", { status: 405, headers: corsHeaders });
     }
+
+    // --- API KEY AUTHENTICATION ---
+    const authHeader = req.headers.get('authorization') || req.headers.get('Authorization');
+    const providedKey = authHeader ? authHeader.replace(/Bearer\s+/i, '').trim() : null;
+    
+    // Read valid keys from Netlify environment variables
+    // Setup VALID_API_KEYS in Netlify UI as a comma-separated list: "sk_live_123,sk_live_456"
+    const validKeysEnv = process.env.VALID_API_KEYS || "";
+    const validKeys = validKeysEnv.split(',').map(k => k.trim()).filter(k => k);
+
+    // Enforce auth if keys are configured in Netlify
+    if (validKeys.length > 0 && (!providedKey || !validKeys.includes(providedKey))) {
+        return new Response(JSON.stringify({ 
+            status: "error", 
+            message: "Unauthorized: Invalid or missing API key. Provide a valid token in the Authorization header: 'Bearer <YOUR_KEY>'." 
+        }), {
+            status: 401,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+    }
+    
+    // Create a safe, masked version of the key for your analytics (e.g. "...a1B2")
+    const clientId = providedKey ? `key_...${providedKey.slice(-4)}` : 'public';
+    // ------------------------------
 
     try {
         const payload = await req.json();
@@ -333,34 +381,38 @@ export default async (req) => {
         const simResults = processSimResults(allFinalValues);
 
         // Async log telemetry to Supabase
-        const visitId = payload.visit_id || ('api-' + Math.random().toString(36).substr(2, 9));
+        const visitId = payload.visit_id || (`api_${clientId}_` + Math.random().toString(36).substr(2, 9));
         const countryCode = req.headers.get('x-country') || req.headers.get('x-nf-country') || 'api';
         
         if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
-            try {
-                await supabase.from('fire_sentiment').insert([{
-                    event_type: "ai_api_request",
-                    visit_id: visitId,
-                    country_code: countryCode,
-                    age: inputs.currentAge,
-                    currency: inputs.currency,
-                    withdrawal_rate: inputs.withdrawalRate,
-                    inflation_belief: inputs.expectedInflationRate,
-                    expenses: inputs.yearlyExpensesInRetirement,
-                    savings: inputs.currentSavings,
-                    pre_fire_return: inputs.preFireReturn,
-                    post_fire_return: inputs.postFireReturn,
-                    yearly_savings: inputs.yearlySavingsContribution,
-                    fire_mode: inputs.mode,
-                    fire_reached: projection.fireReached,
-                    fire_number: projection.fireNumber,
-                    age_at_fire: projection.ageAtFIRE,
-                    sim_type: simType,
-                    success_rate: simResults.successRate,
-                    median_value: simResults.medianValue
-                }]);
-            } catch (logError) {
-                console.error("Supabase Logging Error:", logError);
+            if (shouldWriteToDatabase()) {
+                try {
+                    await supabase.from('fire_sentiment').insert([{
+                        event_type: "ai_api_request",
+                        visit_id: visitId,
+                        country_code: countryCode,
+                        age: inputs.currentAge,
+                        currency: inputs.currency,
+                        withdrawal_rate: inputs.withdrawalRate,
+                        inflation_belief: inputs.expectedInflationRate,
+                        expenses: inputs.yearlyExpensesInRetirement,
+                        savings: inputs.currentSavings,
+                        pre_fire_return: inputs.preFireReturn,
+                        post_fire_return: inputs.postFireReturn,
+                        yearly_savings: inputs.yearlySavingsContribution,
+                        fire_mode: inputs.mode,
+                        fire_reached: projection.fireReached,
+                        fire_number: projection.fireNumber,
+                        age_at_fire: projection.ageAtFIRE,
+                        sim_type: simType,
+                        success_rate: simResults.successRate,
+                        median_value: simResults.medianValue
+                    }]);
+                } catch (logError) {
+                    console.error("Supabase Logging Error:", logError);
+                }
+            } else {
+                console.warn(`[Circuit Breaker] Supabase write skipped. Container hit >${MAX_DB_WRITES_PER_MINUTE} req/min.`);
             }
         }
 
