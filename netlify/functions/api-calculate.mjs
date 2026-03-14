@@ -337,27 +337,31 @@ export default async (req) => {
         const countryCode = req.headers.get('x-country') || req.headers.get('x-nf-country') || 'api';
         
         if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
-            supabase.from('fire_sentiment').insert([{
-                event_type: "ai_api_request",
-                visit_id: visitId,
-                country_code: countryCode,
-                age: inputs.currentAge,
-                currency: inputs.currency,
-                withdrawal_rate: inputs.withdrawalRate,
-                inflation_belief: inputs.expectedInflationRate,
-                expenses: inputs.yearlyExpensesInRetirement,
-                savings: inputs.currentSavings,
-                pre_fire_return: inputs.preFireReturn,
-                post_fire_return: inputs.postFireReturn,
-                yearly_savings: inputs.yearlySavingsContribution,
-                fire_mode: inputs.mode,
-                fire_reached: projection.fireReached,
-                fire_number: projection.fireNumber,
-                age_at_fire: projection.ageAtFIRE,
-                sim_type: simType,
-                success_rate: simResults.successRate,
-                median_value: simResults.medianValue
-            }]).then(() => {}).catch(console.error);
+            try {
+                await supabase.from('fire_sentiment').insert([{
+                    event_type: "ai_api_request",
+                    visit_id: visitId,
+                    country_code: countryCode,
+                    age: inputs.currentAge,
+                    currency: inputs.currency,
+                    withdrawal_rate: inputs.withdrawalRate,
+                    inflation_belief: inputs.expectedInflationRate,
+                    expenses: inputs.yearlyExpensesInRetirement,
+                    savings: inputs.currentSavings,
+                    pre_fire_return: inputs.preFireReturn,
+                    post_fire_return: inputs.postFireReturn,
+                    yearly_savings: inputs.yearlySavingsContribution,
+                    fire_mode: inputs.mode,
+                    fire_reached: projection.fireReached,
+                    fire_number: projection.fireNumber,
+                    age_at_fire: projection.ageAtFIRE,
+                    sim_type: simType,
+                    success_rate: simResults.successRate,
+                    median_value: simResults.medianValue
+                }]);
+            } catch (logError) {
+                console.error("Supabase Logging Error:", logError);
+            }
         }
 
         return new Response(JSON.stringify({
