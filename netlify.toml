@@ -1,0 +1,4 @@
+[[headers]]
+  for = "/openapi.yaml"
+  [headers.values]
+  Content-Type = "application/json"
