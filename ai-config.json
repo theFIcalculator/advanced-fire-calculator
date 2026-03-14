@@ -1,0 +1,41 @@
+{
+  "name": "FIRE Calculator API",
+  "description": "Calculates Financial Independence, Retire Early (FIRE) metrics including time to FIRE, FIRE number, Coast FIRE mapping, and performs Monte Carlo & Historical simulations.",
+  "contact": "support@firecalculator.example",
+  "auth": "none",
+  "endpoints": [
+    {
+      "path": "/.netlify/functions/api-calculate",
+      "method": "POST",
+      "description": "Run a FIRE projection and Monte Carlo simulation based on user inputs.",
+      "parameters": {
+        "currentAge": { "type": "number", "description": "User's current age", "default": 30 },
+        "currentSavings": { "type": "number", "description": "Current portfolio value", "default": 50000 },
+        "yearlySavingsContribution": { "type": "number", "description": "Annual savings contribution", "default": 15000 },
+        "yearlyExpensesInRetirement": { "type": "number", "description": "Expected annual expenses in retirement", "default": 40000 },
+        "withdrawalRate": { "type": "number", "description": "Safe withdrawal rate percentage (e.g., 4)", "default": 4 },
+        "preFireReturn": { "type": "number", "description": "Expected pre-retirement annual return percentage", "default": 7 },
+        "postFireReturn": { "type": "number", "description": "Expected post-retirement annual return percentage", "default": 4 },
+        "expectedInflationRate": { "type": "number", "description": "Expected inflation rate percentage", "default": 3 },
+        "mode": { "type": "string", "description": "Simulation mode: 'normal' or 'coast'", "default": "normal" },
+        "simType": { "type": "string", "description": "Simulation type for advanced modeling: 'monteCarlo' or 'historical'", "default": "monteCarlo" },
+        "simCount": { "type": "number", "description": "Number of Monte Carlo simulations to run", "default": 1000 }
+      },
+      "responses": {
+        "200": {
+          "description": "Calculation Results",
+          "schema": {
+            "status": "success",
+            "results": {
+              "fire_number": "Target portfolio size needed to retire",
+              "age_at_fire": "Calculated age when FIRE is reached",
+              "savings_at_fire": "Calculated portfolio value at FIRE",
+              "success_rate": "Percentage of successful Monte Carlo/Historical simulations (0-100)",
+              "median_value": "Median portfolio value at end of life (age 95)"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
