@@ -43,6 +43,7 @@ export default async (req) => {
       savings_at_fire: data.savings_at_fire,
       total_contributions: data.total_contributions,
       events_data: data.events_data, // JSON Array
+      fields_modified: data.fields_modified, // JSON Array
       
       // New Sim Data
       sim_return: data.sim_return,
