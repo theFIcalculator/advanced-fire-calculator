@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>FIRE Calculator Guide: Plan Your Early Retirement | The FI Calculator</title>
+
+        <meta name="description" content="Learn how to use a FIRE calculator to plan early retirement. Covers the 4% rule, Coast FIRE, Monte Carlo simulations, safe withdrawal rates, and step-by-step instructions.">
+
+        <meta property="og:title" content="FIRE Calculator Guide: Plan Your Early Retirement">
+        <meta property="og:description" content="A complete guide to financial independence and early retirement planning — the 4% rule, FIRE variants, Monte Carlo simulations, and how to stress-test your portfolio.">
+        <meta property="og:type" content="article">
+        <meta property="og:url" content="https://theficalculator.com/guide">
+        <meta property="og:image" content="https://theficalculator.com/social-preview-image.png">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="FIRE Calculator Guide: Plan Your Early Retirement">
+        <meta name="twitter:description" content="A complete guide to financial independence and early retirement planning — the 4% rule, FIRE variants, Monte Carlo simulations, and how to stress-test your portfolio.">
+        <meta name="twitter:image" content="https://theficalculator.com/social-preview-image.png">
+
+        <link rel="canonical" href="https://theficalculator.com/guide">
+        <link rel="icon" type="image/png" href="/favicon.png">
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="style.css">
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "FIRE Calculator Guide: How to Plan Financial Independence & Early Retirement",
+            "description": "A complete guide to using a FIRE calculator — covering the 4% rule, FIRE variants, Monte Carlo simulations, and portfolio stress testing.",
+            "url": "https://theficalculator.com/guide",
+            "author": {
+                "@type": "Person",
+                "name": "FI Thinker"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "The FI Calculator",
+                "url": "https://theficalculator.com"
+            }
+        }
+        </script>
+    </head>
+    <body class="bg-gray-100 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto max-w-3xl bg-white p-6 sm:p-10 rounded-xl shadow-lg">
+
+            <!-- Header -->
+            <header class="mb-10">
+                <div class="text-center mb-6">
+                    <a href="/" class="text-blue-600 text-sm font-medium hover:underline">← Back to the Calculator</a>
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-bold text-blue-700 leading-tight">FIRE Calculator: How to Plan Financial Independence &amp; Early Retirement</h1>
+                <p class="text-gray-500 mt-3 text-sm">By FI Thinker &nbsp;·&nbsp; theficalculator.com</p>
+                <p class="text-gray-600 mt-4 text-lg leading-relaxed">Financial Independence, Retire Early — FIRE — is a straightforward idea: save and invest aggressively enough that your portfolio generates income to cover your living expenses indefinitely. You stop being dependent on a paycheck. Whether you then choose to retire at 40, switch to part-time work, or just keep your current job because you want to, that's up to you.</p>
+                <p class="text-gray-600 mt-3 text-lg leading-relaxed">This guide explains the math behind FIRE, the most common variants, how to stress-test your plan, and how to use <a href="/" class="text-blue-600 hover:underline">The FI Calculator</a> to build a projection you can actually trust.</p>
+                <p class="text-gray-600 mt-3 text-lg leading-relaxed">I built this calculator because every other FIRE tool I tried gave me a single number and called it done. But real planning means asking harder questions: What if I work one more year — is it actually worth it? How much is that daily coffee habit costing me in years? What does my FIRE date look like if I boost my savings rate by 10%? What if I model a side income that ends in a few years, or a big one-off expense coming up? I wanted a tool that could answer those questions properly. That's what this is.</p>
+            </header>
+
+            <!-- TOC -->
+            <nav class="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-10">
+                <p class="font-semibold text-gray-700 mb-3">Contents</p>
+                <ol class="list-decimal list-inside space-y-1 text-blue-600 text-sm">
+                    <li><a href="#four-percent-rule" class="hover:underline">The 4% Rule — the foundation of FIRE</a></li>
+                    <li><a href="#fire-number" class="hover:underline">Your FIRE Number</a></li>
+                    <li><a href="#fire-variants" class="hover:underline">FIRE Variants: Lean, Fat, Barista, Coast</a></li>
+                    <li><a href="#how-to-use" class="hover:underline">How to use this calculator</a></li>
+                    <li><a href="#monte-carlo" class="hover:underline">Monte Carlo vs. Historical simulation</a></li>
+                    <li><a href="#common-mistakes" class="hover:underline">Common planning mistakes</a></li>
+                    <li><a href="#faq" class="hover:underline">FAQ</a></li>
+                    <li><a href="#books" class="hover:underline">Recommended reading</a></li>
+                </ol>
+            </nav>
+
+            <!-- Section 1 -->
+            <section id="four-percent-rule" class="mb-10">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">1. The 4% Rule — the foundation of FIRE</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">The 4% rule comes from the Trinity Study (1998), a research paper by three finance professors at Trinity University. They analysed historical stock and bond portfolios across every 30-year retirement window from 1926 onwards and found that withdrawing 4% of your initial portfolio value per year (adjusted for inflation each year after) resulted in the portfolio surviving in the vast majority of scenarios.</p>
+                <p class="text-gray-600 mb-4 leading-relaxed">In plain terms: if you have £500,000 invested in a diversified portfolio, you can spend £20,000 per year (4% × £500,000), increase that amount each year with inflation, and — based on historical data — your money will almost certainly outlast a 30-year retirement.</p>
+                <p class="text-gray-600 mb-4 leading-relaxed">FIRE planners extend this further. Because early retirees may face 40-, 50-, or even 60-year retirements, many use a more conservative withdrawal rate of 3% or 3.5% for longer safety margins. The calculator lets you adjust this.</p>
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded my-4">
+                    <p class="text-blue-800 text-sm font-medium">Key insight: The 4% rule is a guideline, not a guarantee. It was derived from US market data. Your actual result depends on sequence of returns, asset allocation, and whether you can cut spending in a downturn.</p>
+                </div>
+            </section>
+
+            <!-- Section 2 -->
+            <section id="fire-number" class="mb-10">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">2. Your FIRE Number</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">Your FIRE Number is the portfolio size at which your investments generate enough to cover your annual expenses. The formula is simple:</p>
+                <div class="bg-gray-100 rounded-lg p-4 text-center my-4 font-mono text-gray-800 text-lg">
+                    FIRE Number = Annual Expenses ÷ Withdrawal Rate
+                </div>
+                <p class="text-gray-600 mb-4 leading-relaxed">At a 4% withdrawal rate, this is 25× your annual spending. At 3.5%, it's roughly 29×. At 3%, it's 33×.</p>
+                <p class="text-gray-600 mb-4 leading-relaxed">Examples:</p>
+                <ul class="list-disc list-inside text-gray-600 space-y-2 mb-4 ml-2">
+                    <li>Spending £30,000/year → FIRE Number of £750,000 (at 4%)</li>
+                    <li>Spending £50,000/year → FIRE Number of £1,250,000 (at 4%)</li>
+                    <li>Spending £20,000/year → FIRE Number of £500,000 (at 4%)</li>
+                </ul>
+                <p class="text-gray-600 leading-relaxed">This is the number you're racing towards. The two levers that determine how fast you get there: how much you save each year, and the real rate of return on your investments.</p>
+            </section>
+
+            <!-- Section 3 -->
+            <section id="fire-variants" class="mb-10">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">3. FIRE Variants</h2>
+                <p class="text-gray-600 mb-6 leading-relaxed">FIRE is not one-size-fits-all. Several variants have emerged to reflect different lifestyles and risk tolerances.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Lean FIRE</h3>
+                <p class="text-gray-600 mb-5 leading-relaxed">Retiring on a minimal budget — typically under $40,000/year for a single person. Lean FIRE requires a smaller portfolio (often $500,000–$800,000) and is achievable faster, but leaves little margin for unexpected costs. Often involves significant lifestyle frugality.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Fat FIRE</h3>
+                <p class="text-gray-600 mb-5 leading-relaxed">Early retirement with a comfortable or even luxurious lifestyle — typically $100,000+/year in spending. Fat FIRE requires a substantially larger portfolio (often $2.5M–$5M+), but provides far more cushion against market downturns and unexpected expenses.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Barista FIRE</h3>
+                <p class="text-gray-600 mb-5 leading-relaxed">A hybrid approach: you accumulate a portfolio large enough to cover most of your expenses, then supplement it with part-time or low-stress work. The name comes from the idea of taking a barista job — not for income, but for health insurance and social engagement. Barista FIRE allows you to retire "mostly" much earlier than full FIRE.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Coast FIRE</h3>
+                <p class="text-gray-600 mb-5 leading-relaxed">Coast FIRE is a milestone rather than a retirement date. You've reached Coast FIRE when you have enough invested today that — without adding another penny — compound growth alone will grow your portfolio to your full FIRE Number by traditional retirement age (typically 65).</p>
+                <p class="text-gray-600 mb-4 leading-relaxed">Once you hit Coast FIRE, you only need to earn enough to cover your current living expenses. No more aggressive saving required. Many people use this as a "permission slip" to change careers, go part-time, or pursue meaningful work that pays less.</p>
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded my-4">
+                    <p class="text-blue-800 text-sm font-medium">The FI Calculator has a dedicated Coast FIRE mode. Switch the "FIRE Mode" dropdown to "Coast FIRE" to see your Coast FIRE number and how many years until you reach it.</p>
+                </div>
+            </section>
+
+            <!-- Section 4 -->
+            <section id="how-to-use" class="mb-10">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">4. How to use The FI Calculator</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">The calculator works in layers — start with the basics and add complexity as needed.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Step 1: Your Financial Snapshot</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">Enter your current age, currency, current savings/investments, gross annual income, and how much you save per year. The calculator will immediately show your FIRE Number and projected date.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Step 2: Add Life Events (optional)</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">Real life isn't linear. Add one-time or recurring events — a pension starting at 65, college costs for a child at 48, a mortgage ending at 55. Each event shifts your trajectory and the calculator handles them all simultaneously.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Step 3: Run a Simulation</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">The basic projection assumes a fixed return each year. For a more honest picture, run a Monte Carlo simulation (random futures) or a Historical simulation (actual market cycles from 1928–2023). Both give you a success rate — the percentage of scenarios where your money lasts.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Step 4: Stress-test with One More Year</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">The "One More Year" tool answers a common anxiety: "What if I work one more year?" It shows exactly how much each additional year of work improves your success rate and increases your sustainable spending — helping you decide whether the trade-off is worth it.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Step 5: Check daily habits</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">The Time-Cost translator converts everyday purchases into their FIRE delay cost. A £5 daily coffee habit might push your FIRE date back by 6 months. Seeing the actual impact — rather than just the monthly cost — changes the decision.</p>
+            </section>
+
+            <!-- Section 5 -->
+            <section id="monte-carlo" class="mb-10">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">5. Monte Carlo vs. Historical simulation — what's the difference?</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">Both simulations answer the same question — "Will my money last?" — but they model the future differently.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Monte Carlo simulation</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">Runs 1,000 randomly generated future scenarios based on the statistical properties of markets (average return and volatility). Each scenario is a different "roll of the dice." The result is a success rate: what percentage of those 1,000 futures left you with money at your target age.</p>
+                <p class="text-gray-600 mb-4 leading-relaxed">Monte Carlo captures a wide range of possible futures, including scenarios that have never happened historically. Its weakness is that it assumes returns are random and independent year-to-year — which is a simplification.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Historical simulation</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">Replays every actual historical 30-year (or longer) period using real S&P 500 and Treasury bond returns from 1928 to 2023. It asks: "If you had retired in 1929, 1930, 1931… 1993, how would you have done?" Each starting year is a test case.</p>
+                <p class="text-gray-600 mb-4 leading-relaxed">Historical simulation captures real-world patterns like the Great Depression, the 1970s stagflation, and the dot-com crash — including the dangerous "sequence of returns risk" where a crash early in retirement does far more damage than one late in retirement.</p>
+
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 my-4">
+                    <p class="text-gray-700 text-sm font-semibold mb-1">Which to trust?</p>
+                    <p class="text-gray-600 text-sm">Use both. If your plan shows 90%+ success on Monte Carlo and 85%+ on Historical, it's robust. If they diverge significantly, dig into why. A plan that only works in calm markets is not a plan.</p>
+                </div>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Sequence of Returns Risk</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">The single biggest threat to early retirement plans isn't average returns — it's the order of returns. A market crash in year 1 of retirement forces you to sell assets at a low, permanently reducing the portfolio that needs to recover. The same crash in year 20 of a 30-year retirement barely matters.</p>
+                <p class="text-gray-600 mb-4 leading-relaxed">The Flexible Withdrawal (Guardrails) simulation in the calculator models a sensible response: if your portfolio drops below a threshold, spending is automatically cut by a percentage. This dynamic strategy dramatically improves success rates without requiring a larger portfolio.</p>
+            </section>
+
+            <!-- Section 6 -->
+            <section id="common-mistakes" class="mb-10">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">6. Common FIRE planning mistakes</h2>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Confusing nominal and real returns</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">A 7% annual return sounds good. But if inflation is 3%, your real (inflation-adjusted) return is about 4%. The FI Calculator takes a nominal expected return and an inflation rate as separate inputs and handles the adjustment internally — so enter your expected nominal return (e.g. 7%) and your expected inflation (e.g. 3%), and the calculator does the rest. Don't pre-subtract inflation yourself, or you'll double-count it.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Ignoring the retirement horizon</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">The Trinity Study modelled 30-year retirements. If you retire at 40, you may face a 50+ year retirement — and the same withdrawal rate that works for 30 years may not hold for 50. Rather than guessing, use the simulation tools: set your target age to your expected retirement age and see what success rate your current plan achieves. If it's below 85%, adjust the withdrawal rate or savings target accordingly.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Not modelling life events</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">A linear projection that ignores a future pension, a mortgage payoff, or a child's education costs is significantly less accurate than one that includes them. Use the Life Events section to model your actual financial timeline.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Treating One More Year as a free option</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">"Just one more year" is a common pattern that delays retirement indefinitely. Use the One More Year tool to see the actual marginal benefit of each additional year — often after a certain point, the improvement in success rate is minimal and the cost in time is real.</p>
+            </section>
+
+            <!-- Section 7 / FAQ -->
+            <section id="faq" class="mb-10">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">7. Frequently Asked Questions</h2>
+
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">What is a good FIRE savings rate?</h3>
+                        <p class="text-gray-600 leading-relaxed">The higher the better, but the relationship isn't linear. At a 10% savings rate, FIRE takes roughly 40+ years. At 25%, around 30 years. At 50%, about 17 years. At 70%, under 10 years. Most FIRE practitioners target 40–60%. Use the calculator's comparison plot to see how your savings rate affects your timeline.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">What return should I assume?</h3>
+                        <p class="text-gray-600 leading-relaxed">For a globally diversified index fund portfolio, 4–5% real return is a conservative and commonly used assumption. The historical real return of the US stock market has been around 7%, but using a lower number is prudent — especially for long time horizons and international diversification.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Does the 4% rule work outside the US?</h3>
+                        <p class="text-gray-600 leading-relaxed">The original research used US market data. The US has had exceptionally strong returns historically. For non-US investors, a slightly more conservative rate (3–3.5%) is advisable. The historical simulation in this calculator uses US S&P 500 data, so international users should treat it as an optimistic bound.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">What success rate should I aim for?</h3>
+                        <p class="text-gray-600 leading-relaxed">There's no universal answer. 95%+ is very safe. 85–90% is widely considered acceptable for flexible retirees who can cut spending in downturns. Below 80% means you should either save more, spend less, or plan to do some work in early retirement. A success rate of 100% often means you're being too conservative and working longer than necessary.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Is this calculator suitable for non-US users?</h3>
+                        <p class="text-gray-600 leading-relaxed">Yes. You can select your currency and country. The underlying math works the same regardless of country. The historical data is US-based (S&P 500 and Treasuries), so treat historical simulation results as a reference point rather than a precise prediction for non-US portfolios.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">How is this different from other FIRE calculators?</h3>
+                        <p class="text-gray-600 leading-relaxed mb-2">Most FIRE calculators give you a single projected retirement date based on a fixed return assumption. That's a useful starting point, but it doesn't answer the questions that actually matter when you're close to pulling the trigger.</p>
+                        <p class="text-gray-600 leading-relaxed mb-2">I built this because I wanted to model things most calculators can't handle: What does working one more year actually buy me in safety margin? How much is my daily coffee habit delaying my FIRE date, in real years? What happens to my trajectory if I add a side income at 45 that ends at 55, or model a pension kicking in at 67?</p>
+                        <p class="text-gray-600 leading-relaxed">The life events system, the One More Year tool, the Time-Cost translator, the Monte Carlo and Historical simulations, and the Coast FIRE mode were all built to answer those specific questions — not just produce a number.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 8 / Books -->
+            <section id="books" class="mb-10">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">8. Recommended Reading</h2>
+                <p class="text-gray-600 mb-6 leading-relaxed">These books are the most frequently recommended in FIRE communities. Each one covers different dimensions of financial independence — the math, the mindset, the lifestyle, and the philosophy.</p>
+
+                <div class="space-y-5">
+                    <a href="https://www.amazon.com/dp/1533667926?tag=AMAZON_TAG" target="_blank" rel="noopener" class="flex gap-4 items-start p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors no-underline group">
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">The Simple Path to Wealth</p>
+                            <p class="text-gray-500 text-sm mb-1">JL Collins</p>
+                            <p class="text-gray-600 text-sm">The clearest explanation of the index fund approach to FIRE. Collins argues for simplicity over complexity — one fund, low fees, stay the course. A must-read for anyone starting out.</p>
+                            <p class="text-blue-600 text-xs mt-2">View on Amazon →</p>
+                        </div>
+                    </a>
+                    <a href="https://www.amazon.com/dp/0593241681?tag=AMAZON_TAG" target="_blank" rel="noopener" class="flex gap-4 items-start p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors no-underline group">
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">Die With Zero</p>
+                            <p class="text-gray-500 text-sm mb-1">Bill Perkins</p>
+                            <p class="text-gray-600 text-sm">A counterpoint to over-saving. Perkins argues that dying with a large portfolio means you traded away experiences you can never get back. A useful check on the "just one more year" mentality.</p>
+                            <p class="text-blue-600 text-xs mt-2">View on Amazon →</p>
+                        </div>
+                    </a>
+                    <a href="https://www.amazon.com/dp/0143115766?tag=AMAZON_TAG" target="_blank" rel="noopener" class="flex gap-4 items-start p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors no-underline group">
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">Your Money or Your Life</p>
+                            <p class="text-gray-500 text-sm mb-1">Vicki Robin</p>
+                            <p class="text-gray-600 text-sm">The original FIRE movement book, first published in 1992. Reframes money as stored life energy and provides a framework for achieving financial independence based on values rather than arbitrary targets.</p>
+                            <p class="text-blue-600 text-xs mt-2">View on Amazon →</p>
+                        </div>
+                    </a>
+                    <a href="https://www.amazon.com/dp/0857199099?tag=AMAZON_TAG" target="_blank" rel="noopener" class="flex gap-4 items-start p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors no-underline group">
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">The Psychology of Money</p>
+                            <p class="text-gray-500 text-sm mb-1">Morgan Housel</p>
+                            <p class="text-gray-600 text-sm">Eighteen short chapters on how behaviour, not intelligence, determines financial outcomes. Explains why people who understand compound interest still make poor decisions — and what to do about it.</p>
+                            <p class="text-blue-600 text-xs mt-2">View on Amazon →</p>
+                        </div>
+                    </a>
+                    <a href="https://www.amazon.com/dp/1523505745?tag=AMAZON_TAG" target="_blank" rel="noopener" class="flex gap-4 items-start p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors no-underline group">
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">I Will Teach You To Be Rich</p>
+                            <p class="text-gray-500 text-sm mb-1">Ramit Sethi</p>
+                            <p class="text-gray-600 text-sm">Practical, no-nonsense personal finance for people in their 20s and 30s. Covers automating savings, eliminating debt, and investing — without requiring frugality or sacrifice.</p>
+                            <p class="text-blue-600 text-xs mt-2">View on Amazon →</p>
+                        </div>
+                    </a>
+                </div>
+
+                <p class="text-gray-400 text-xs mt-4">As an Amazon Associate, The FI Calculator earns from qualifying purchases. This adds no cost to you.</p>
+            </section>
+
+            <!-- CTA -->
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 text-center mt-10">
+                <p class="text-xl font-bold text-blue-700 mb-2">Ready to run your projection?</p>
+                <p class="text-gray-600 mb-4">Use the calculator to build a plan, stress-test it against 100 years of market history, and find your FIRE number.</p>
+                <a href="/" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors">Open The FI Calculator →</a>
+            </div>
+
+        </div>
+
+        <footer class="text-center text-gray-400 text-xs mt-8 pb-6">
+            <p>© The FI Calculator · <a href="/" class="hover:underline">theficalculator.com</a></p>
+            <p class="mt-1">This calculator is for educational purposes only and does not constitute financial advice.</p>
+        </footer>
+    </body>
+</html>
