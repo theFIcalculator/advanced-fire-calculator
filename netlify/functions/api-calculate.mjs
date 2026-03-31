@@ -3,38 +3,38 @@ import { createClient } from '@supabase/supabase-js';
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
 const historicalData = [ 
-    { year: 1928, stocks: 0.4381, bonds: 0.0084 }, { year: 1929, stocks: -0.0830, bonds: 0.0420 }, { year: 1930, stocks: -0.2490, bonds: 0.0454 }, 
-    { year: 1931, stocks: -0.4334, bonds: -0.0256 }, { year: 1932, stocks: -0.0819, bonds: 0.0879 }, { year: 1933, stocks: 0.5399, bonds: 0.0351 }, 
-    { year: 1934, stocks: -0.0144, bonds: 0.0784 }, { year: 1935, stocks: 0.4767, bonds: 0.0465 }, { year: 1936, stocks: 0.3393, bonds: 0.0526 }, 
-    { year: 1937, stocks: -0.3503, bonds: 0.0113 }, { year: 1938, stocks: 0.3112, bonds: 0.0436 }, { year: 1939, stocks: -0.0041, bonds: 0.0441 }, 
-    { year: 1940, stocks: -0.0978, bonds: 0.0540 }, { year: 1941, stocks: -0.1159, bonds: 0.0234 }, { year: 1942, stocks: 0.2034, bonds: 0.0267 }, 
-    { year: 1943, stocks: 0.2590, bonds: 0.0249 }, { year: 1944, stocks: 0.1975, bonds: 0.0267 }, { year: 1945, stocks: 0.3644, bonds: 0.0358 }, 
-    { year: 1946, stocks: -0.0807, bonds: 0.0223 }, { year: 1947, stocks: 0.0571, bonds: 0.0142 }, { year: 1948, stocks: 0.0550, bonds: 0.0157 }, 
-    { year: 1949, stocks: 0.1879, bonds: 0.0396 }, { year: 1950, stocks: 0.3171, bonds: 0.0166 }, { year: 1951, stocks: 0.2402, bonds: -0.0016 }, 
-    { year: 1952, stocks: 0.1837, bonds: 0.0210 }, { year: 1953, stocks: -0.0099, bonds: 0.0231 }, { year: 1954, stocks: 0.5262, bonds: 0.0505 }, 
-    { year: 1955, stocks: 0.3156, bonds: -0.0054 }, { year: 1956, stocks: 0.0656, bonds: -0.0245 }, { year: 1957, stocks: -0.1078, bonds: 0.0531 }, 
-    { year: 1958, stocks: 0.4337, bonds: -0.0093 }, { year: 1959, stocks: 0.1196, bonds: -0.0236 }, { year: 1960, stocks: 0.0047, bonds: 0.1164 }, 
-    { year: 1961, stocks: 0.2689, bonds: 0.0286 }, { year: 1962, stocks: -0.0873, bonds: 0.0543 }, { year: 1963, stocks: 0.2280, bonds: 0.0218 }, 
-    { year: 1964, stocks: 0.1648, bonds: 0.0343 }, { year: 1965, stocks: 0.1245, bonds: 0.0121 }, { year: 1966, stocks: -0.1006, bonds: 0.0366 }, 
-    { year: 1967, stocks: 0.2398, bonds: -0.0298 }, { year: 1968, stocks: 0.1106, bonds: 0.0335 }, { year: 1969, stocks: -0.0850, bonds: -0.0506 }, 
-    { year: 1970, stocks: 0.0401, bonds: 0.1213 }, { year: 1971, stocks: 0.1431, bonds: 0.0931 }, { year: 1972, stocks: 0.1898, bonds: 0.0583 }, 
-    { year: 1973, stocks: -0.1466, bonds: 0.0338 }, { year: 1974, stocks: -0.2647, bonds: 0.0441 }, { year: 1975, stocks: 0.3720, bonds: 0.0919 }, 
-    { year: 1976, stocks: 0.2384, bonds: 0.1681 }, { year: 1977, stocks: -0.0718, bonds: 0.0299 }, { year: 1978, stocks: 0.0656, bonds: -0.0119 }, 
-    { year: 1979, stocks: 0.1844, bonds: -0.0110 }, { year: 1980, stocks: 0.3250, bonds: 0.0271 }, { year: 1981, stocks: -0.0491, bonds: 0.0655 }, 
-    { year: 1982, stocks: 0.2155, bonds: 0.4035 }, { year: 1983, stocks: 0.2256, bonds: 0.0366 }, { year: 1984, stocks: 0.0627, bonds: 0.1584 }, 
-    { year: 1985, stocks: 0.3173, bonds: 0.2210 }, { year: 1986, stocks: 0.1867, bonds: 0.1560 }, { year: 1987, stocks: 0.0525, bonds: -0.0270 }, 
-    { year: 1988, stocks: 0.1661, bonds: 0.0789 }, { year: 1989, stocks: 0.3169, bonds: 0.1812 }, { year: 1990, stocks: -0.0310, bonds: 0.0617 }, 
-    { year: 1991, stocks: 0.3047, bonds: 0.1593 }, { year: 1992, stocks: 0.0762, bonds: 0.0792 }, { year: 1993, stocks: 0.1008, bonds: 0.1366 }, 
-    { year: 1994, stocks: 0.0132, bonds: -0.0782 }, { year: 1995, stocks: 0.3758, bonds: 0.2348 }, { year: 1996, stocks: 0.2296, bonds: 0.0163 }, 
-    { year: 1997, stocks: 0.3336, bonds: 0.0991 }, { year: 1998, stocks: 0.2858, bonds: 0.1321 }, { year: 1999, stocks: 0.2104, bonds: -0.0825 }, 
-    { year: 2000, stocks: -0.0910, bonds: 0.1666 }, { year: 2001, stocks: -0.1189, bonds: 0.0558 }, { year: 2002, stocks: -0.2210, bonds: 0.1026 }, 
-    { year: 2003, stocks: 0.2868, bonds: 0.0410 }, { year: 2004, stocks: 0.1088, bonds: 0.0427 }, { year: 2005, stocks: 0.0491, bonds: 0.0296 }, 
-    { year: 2006, stocks: 0.1579, bonds: 0.0223 }, { year: 2007, stocks: 0.0549, bonds: 0.0699 }, { year: 2008, stocks: -0.3700, bonds: 0.2010 }, 
-    { year: 2009, stocks: 0.2646, bonds: -0.1112 }, { year: 2010, stocks: 0.1506, bonds: 0.0846 }, { year: 2011, stocks: 0.0211, bonds: 0.1604 }, 
-    { year: 2012, stocks: 0.1600, bonds: 0.0297 }, { year: 2013, stocks: 0.3239, bonds: -0.0910 }, { year: 2014, stocks: 0.1369, bonds: 0.1075 }, 
-    { year: 2015, stocks: 0.0138, bonds: 0.0131 }, { year: 2016, stocks: 0.1196, bonds: 0.0061 }, { year: 2017, stocks: 0.2183, bonds: 0.0280 }, 
-    { year: 2018, stocks: -0.0438, bonds: 0.0001 }, { year: 2019, stocks: 0.3149, bonds: 0.1465 }, { year: 2020, stocks: 0.1840, bonds: 0.1175 }, 
-    { year: 2021, stocks: 0.2871, bonds: -0.0450 }, { year: 2022, stocks: -0.1811, bonds: -0.312 }, { year: 2023, stocks: 0.2629, bonds: 0.0405 }
+    { year: 1928, stocks: 0.4381, bonds: 0.0084, inflation: 0.03 }, { year: 1929, stocks: -0.0830, bonds: 0.0420, inflation: 0.03 }, { year: 1930, stocks: -0.2490, bonds: 0.0454, inflation: 0.03 }, 
+    { year: 1931, stocks: -0.4334, bonds: -0.0256, inflation: 0.03 }, { year: 1932, stocks: -0.0819, bonds: 0.0879, inflation: 0.03 }, { year: 1933, stocks: 0.5399, bonds: 0.0351, inflation: 0.03 }, 
+    { year: 1934, stocks: -0.0144, bonds: 0.0784, inflation: 0.03 }, { year: 1935, stocks: 0.4767, bonds: 0.0465, inflation: 0.03 }, { year: 1936, stocks: 0.3393, bonds: 0.0526, inflation: 0.03 }, 
+    { year: 1937, stocks: -0.3503, bonds: 0.0113, inflation: 0.03 }, { year: 1938, stocks: 0.3112, bonds: 0.0436, inflation: 0.03 }, { year: 1939, stocks: -0.0041, bonds: 0.0441, inflation: 0.03 }, 
+    { year: 1940, stocks: -0.0978, bonds: 0.0540, inflation: 0.03 }, { year: 1941, stocks: -0.1159, bonds: 0.0234, inflation: 0.03 }, { year: 1942, stocks: 0.2034, bonds: 0.0267, inflation: 0.03 }, 
+    { year: 1943, stocks: 0.2590, bonds: 0.0249, inflation: 0.03 }, { year: 1944, stocks: 0.1975, bonds: 0.0267, inflation: 0.03 }, { year: 1945, stocks: 0.3644, bonds: 0.0358, inflation: 0.03 }, 
+    { year: 1946, stocks: -0.0807, bonds: 0.0223, inflation: 0.03 }, { year: 1947, stocks: 0.0571, bonds: 0.0142, inflation: 0.03 }, { year: 1948, stocks: 0.0550, bonds: 0.0157, inflation: 0.03 }, 
+    { year: 1949, stocks: 0.1879, bonds: 0.0396, inflation: 0.03 }, { year: 1950, stocks: 0.3171, bonds: 0.0166, inflation: 0.03 }, { year: 1951, stocks: 0.2402, bonds: -0.0016, inflation: 0.03 }, 
+    { year: 1952, stocks: 0.1837, bonds: 0.0210, inflation: 0.03 }, { year: 1953, stocks: -0.0099, bonds: 0.0231, inflation: 0.03 }, { year: 1954, stocks: 0.5262, bonds: 0.0505, inflation: 0.03 }, 
+    { year: 1955, stocks: 0.3156, bonds: -0.0054, inflation: 0.03 }, { year: 1956, stocks: 0.0656, bonds: -0.0245, inflation: 0.03 }, { year: 1957, stocks: -0.1078, bonds: 0.0531, inflation: 0.03 }, 
+    { year: 1958, stocks: 0.4337, bonds: -0.0093, inflation: 0.03 }, { year: 1959, stocks: 0.1196, bonds: -0.0236, inflation: 0.03 }, { year: 1960, stocks: 0.0047, bonds: 0.1164, inflation: 0.03 }, 
+    { year: 1961, stocks: 0.2689, bonds: 0.0286, inflation: 0.03 }, { year: 1962, stocks: -0.0873, bonds: 0.0543, inflation: 0.03 }, { year: 1963, stocks: 0.2280, bonds: 0.0218, inflation: 0.03 }, 
+    { year: 1964, stocks: 0.1648, bonds: 0.0343, inflation: 0.03 }, { year: 1965, stocks: 0.1245, bonds: 0.0121, inflation: 0.03 }, { year: 1966, stocks: -0.1006, bonds: 0.0366, inflation: 0.03 }, 
+    { year: 1967, stocks: 0.2398, bonds: -0.0298, inflation: 0.03 }, { year: 1968, stocks: 0.1106, bonds: 0.0335, inflation: 0.03 }, { year: 1969, stocks: -0.0850, bonds: -0.0506, inflation: 0.03 }, 
+    { year: 1970, stocks: 0.0401, bonds: 0.1213, inflation: 0.03 }, { year: 1971, stocks: 0.1431, bonds: 0.0931, inflation: 0.03 }, { year: 1972, stocks: 0.1898, bonds: 0.0583, inflation: 0.03 }, 
+    { year: 1973, stocks: -0.1466, bonds: 0.0338, inflation: 0.03 }, { year: 1974, stocks: -0.2647, bonds: 0.0441, inflation: 0.03 }, { year: 1975, stocks: 0.3720, bonds: 0.0919, inflation: 0.03 }, 
+    { year: 1976, stocks: 0.2384, bonds: 0.1681, inflation: 0.03 }, { year: 1977, stocks: -0.0718, bonds: 0.0299, inflation: 0.03 }, { year: 1978, stocks: 0.0656, bonds: -0.0119, inflation: 0.03 }, 
+    { year: 1979, stocks: 0.1844, bonds: -0.0110, inflation: 0.03 }, { year: 1980, stocks: 0.3250, bonds: 0.0271, inflation: 0.03 }, { year: 1981, stocks: -0.0491, bonds: 0.0655, inflation: 0.03 }, 
+    { year: 1982, stocks: 0.2155, bonds: 0.4035, inflation: 0.03 }, { year: 1983, stocks: 0.2256, bonds: 0.0366, inflation: 0.03 }, { year: 1984, stocks: 0.0627, bonds: 0.1584, inflation: 0.03 }, 
+    { year: 1985, stocks: 0.3173, bonds: 0.2210, inflation: 0.03 }, { year: 1986, stocks: 0.1867, bonds: 0.1560, inflation: 0.03 }, { year: 1987, stocks: 0.0525, bonds: -0.0270, inflation: 0.03 }, 
+    { year: 1988, stocks: 0.1661, bonds: 0.0789, inflation: 0.03 }, { year: 1989, stocks: 0.3169, bonds: 0.1812, inflation: 0.03 }, { year: 1990, stocks: -0.0310, bonds: 0.0617, inflation: 0.03 }, 
+    { year: 1991, stocks: 0.3047, bonds: 0.1593, inflation: 0.03 }, { year: 1992, stocks: 0.0762, bonds: 0.0792, inflation: 0.03 }, { year: 1993, stocks: 0.1008, bonds: 0.1366, inflation: 0.03 }, 
+    { year: 1994, stocks: 0.0132, bonds: -0.0782, inflation: 0.03 }, { year: 1995, stocks: 0.3758, bonds: 0.2348, inflation: 0.03 }, { year: 1996, stocks: 0.2296, bonds: 0.0163, inflation: 0.03 }, 
+    { year: 1997, stocks: 0.3336, bonds: 0.0991, inflation: 0.03 }, { year: 1998, stocks: 0.2858, bonds: 0.1321, inflation: 0.03 }, { year: 1999, stocks: 0.2104, bonds: -0.0825, inflation: 0.03 }, 
+    { year: 2000, stocks: -0.0910, bonds: 0.1666, inflation: 0.03 }, { year: 2001, stocks: -0.1189, bonds: 0.0558, inflation: 0.03 }, { year: 2002, stocks: -0.2210, bonds: 0.1026, inflation: 0.03 }, 
+    { year: 2003, stocks: 0.2868, bonds: 0.0410, inflation: 0.03 }, { year: 2004, stocks: 0.1088, bonds: 0.0427, inflation: 0.03 }, { year: 2005, stocks: 0.0491, bonds: 0.0296, inflation: 0.03 }, 
+    { year: 2006, stocks: 0.1579, bonds: 0.0223, inflation: 0.03 }, { year: 2007, stocks: 0.0549, bonds: 0.0699, inflation: 0.03 }, { year: 2008, stocks: -0.3700, bonds: 0.2010, inflation: 0.03 }, 
+    { year: 2009, stocks: 0.2646, bonds: -0.1112, inflation: 0.03 }, { year: 2010, stocks: 0.1506, bonds: 0.0846, inflation: 0.03 }, { year: 2011, stocks: 0.0211, bonds: 0.1604, inflation: 0.03 }, 
+    { year: 2012, stocks: 0.1600, bonds: 0.0297, inflation: 0.03 }, { year: 2013, stocks: 0.3239, bonds: -0.0910, inflation: 0.03 }, { year: 2014, stocks: 0.1369, bonds: 0.1075, inflation: 0.03 }, 
+    { year: 2015, stocks: 0.0138, bonds: 0.0131, inflation: 0.03 }, { year: 2016, stocks: 0.1196, bonds: 0.0061, inflation: 0.03 }, { year: 2017, stocks: 0.2183, bonds: 0.0280, inflation: 0.03 }, 
+    { year: 2018, stocks: -0.0438, bonds: 0.0001, inflation: 0.03 }, { year: 2019, stocks: 0.3149, bonds: 0.1465, inflation: 0.03 }, { year: 2020, stocks: 0.1840, bonds: 0.1175, inflation: 0.03 }, 
+    { year: 2021, stocks: 0.2871, bonds: -0.0450, inflation: 0.03 }, { year: 2022, stocks: -0.1811, bonds: -0.312, inflation: 0.03 }, { year: 2023, stocks: 0.2629, bonds: 0.0405, inflation: 0.03 }
 ];
 
 let spareRandom = null;
@@ -55,18 +55,18 @@ function generateNormalRandom() {
     return val1 * s;
 }
 
-function runSingleSimulation(getReturnForYear, portfolioValue, retirementAge, baseWithdrawal, reducedWithdrawal, flexThreshold, inflation) {
+function runSingleSimulation(getRealReturnForYear, portfolioValue, retirementAge, baseWithdrawal, reducedWithdrawal, flexThreshold) {
     let currentPortfolio = portfolioValue;
     const initialPortfolioValue = portfolioValue;
     const flexTriggerValue = initialPortfolioValue * (1 - flexThreshold);
+    const path = [{ age: retirementAge, value: currentPortfolio }];
     const MAX_SIM_AGE = 95;
     const simYears = MAX_SIM_AGE - retirementAge;
     let flexYears = 0;
     let isFlexing = false;
 
     for (let year = 0; year < simYears; year++) {
-        const currentReturn = getReturnForYear(year);
-        const realReturn = (1 + currentReturn) / (1 + inflation) - 1;
+        const realReturn = getRealReturnForYear(year);
         
         currentPortfolio *= (1 + realReturn);
         
@@ -86,16 +86,25 @@ function runSingleSimulation(getReturnForYear, portfolioValue, retirementAge, ba
 
         currentPortfolio -= withdrawal;
         if (currentPortfolio < 0) currentPortfolio = 0;
+        
+        path.push({ age: retirementAge + year + 1, value: currentPortfolio });
     }
-    return { finalValue: currentPortfolio, flexYears };
+    return { path, finalValue: currentPortfolio, flexYears };
 }
 
-function processSimResults(finalValues) {
+function processSimResults(finalValues, flexYearsData) {
     const successfulSims = finalValues.filter(val => val > 0).length;
     const successRate = (successfulSims / finalValues.length) * 100;
+
     finalValues.sort((a, b) => a - b);
     const medianValue = finalValues[Math.floor(finalValues.length / 2)];
-    return { successRate, medianValue };
+    const p10Value = finalValues[Math.floor(finalValues.length * 0.10)];
+    const p90Value = finalValues[Math.floor(finalValues.length * 0.90)];
+    
+    flexYearsData.sort((a,b) => a - b);
+    const medianFlexYears = flexYearsData.length > 0 ? flexYearsData[Math.floor(flexYearsData.length/2)] : 0;
+
+    return { successRate, medianValue, p10Value, p90Value, medianFlexYears };
 }
 
 function calculateProjection(inputs, events = []) {
@@ -204,7 +213,7 @@ function calculateProjection(inputs, events = []) {
                     events.forEach(ev => {
                         if (currentMonthAge >= ev.startAge && currentMonthAge < ev.endAge + 1 / 12) {
                             let annualAmount = (ev.type === 'income' ? ev.amount : -ev.amount);
-                            if (ev.type === 'income' && !ev.isInflationAdjusted) {
+                            if (!ev.isInflationAdjusted) {
                                 const yearsElapsed = (month - 1) / 12;
                                 const inflationRate = expectedInflationRatePercent / 100;
                                 annualAmount = annualAmount / Math.pow(1 + inflationRate, yearsElapsed);
@@ -334,51 +343,69 @@ export default async (req) => {
         }
 
         // Run Monte Carlo natively
-        const simPortfolioValue = Math.round(projection.savingsAtFIRE);
-        const simRetirementAge = Math.round(projection.ageAtFIRE);
+        const simPortfolioValue = payload.simPortfolioValue !== undefined ? payload.simPortfolioValue : Math.round(projection.savingsAtFIRE);
+        const simRetirementAge = payload.simRetirementAge !== undefined ? payload.simRetirementAge : Math.round(projection.ageAtFIRE);
         const inflation = inputs.expectedInflationRate / 100;
-        const netYearlyWithdrawal = Math.max(0, inputs.yearlyExpensesInRetirement - (inputs.monthlyIncomeAfterFIRE * 12));
+        const netYearlyWithdrawal = payload.simYearlyExpenses !== undefined ? 
+            Math.max(0, payload.simYearlyExpenses - (inputs.monthlyIncomeAfterFIRE * 12)) : 
+            Math.max(0, inputs.yearlyExpensesInRetirement - (inputs.monthlyIncomeAfterFIRE * 12));
         
         // Sim overrides if provided by AI
         const simType = payload.simType || 'monteCarlo';
-        const simVolatility = (payload.simVolatility || 15) / 100;
+        const simVolatility = (payload.simVolatility !== undefined ? payload.simVolatility : 15) / 100;
         const simReturn = (payload.simReturn !== undefined ? payload.simReturn : 7) / 100;
         const simCount = payload.simCount || 1000;
-        const flexThreshold = (payload.flexThreshold || 0) / 100;
-        const flexReduction = (payload.flexReduction || 0) / 100;
+        const flexThreshold = (payload.flexThreshold !== undefined ? payload.flexThreshold : 0) / 100;
+        const flexReduction = (payload.flexReduction !== undefined ? payload.flexReduction : 0) / 100;
         const stockAllocation = payload.stockAllocation !== undefined ? payload.stockAllocation / 100 : 0.6;
         const bondAllocation = 1 - stockAllocation;
         const reducedYearlyWithdrawal = netYearlyWithdrawal * (1 - flexReduction);
 
         let allFinalValues = [];
+        let allFlexYears = [];
 
         if (simType === 'monteCarlo') {
             for (let i = 0; i < simCount; i++) {
-                const { finalValue } = runSingleSimulation(
-                    () => generateNormalRandom() * simVolatility + simReturn,
-                    simPortfolioValue, simRetirementAge, netYearlyWithdrawal, reducedYearlyWithdrawal, flexThreshold, inflation
+                const { finalValue, flexYears } = runSingleSimulation(
+                    () => {
+                        const nominalReturn = generateNormalRandom() * simVolatility + simReturn;
+                        return (1 + nominalReturn) / (1 + inflation) - 1;
+                    },
+                    simPortfolioValue, simRetirementAge, netYearlyWithdrawal, reducedYearlyWithdrawal, flexThreshold
                 );
                 allFinalValues.push(finalValue);
+                allFlexYears.push(flexYears);
             }
         } else {
             const simDuration = 95 - simRetirementAge;
             if (simDuration > 0) {
                 for (let i = 0; i <= historicalData.length - simDuration; i++) {
                     const historicalWindow = historicalData.slice(i, i + simDuration);
-                    const { finalValue } = runSingleSimulation(
+                    const { finalValue, flexYears } = runSingleSimulation(
                         (yearIndex) => {
-                            return historicalWindow[yearIndex].stocks * stockAllocation + historicalWindow[yearIndex].bonds * bondAllocation;
+                            const nominalReturn = historicalWindow[yearIndex].stocks * stockAllocation + historicalWindow[yearIndex].bonds * bondAllocation;
+                            const historicalInflation = historicalWindow[yearIndex].inflation;
+                            return (1 + nominalReturn) / (1 + historicalInflation) - 1;
                         },
-                        simPortfolioValue, simRetirementAge, netYearlyWithdrawal, reducedYearlyWithdrawal, flexThreshold, inflation
+                        simPortfolioValue, simRetirementAge, netYearlyWithdrawal, reducedYearlyWithdrawal, flexThreshold
                     );
                     allFinalValues.push(finalValue);
+                    allFlexYears.push(flexYears);
                 }
             } else {
                 allFinalValues = [simPortfolioValue];
+                allFlexYears = [0];
             }
         }
 
-        const simResults = processSimResults(allFinalValues);
+        if (allFinalValues.length === 0) {
+            return new Response(JSON.stringify({ status: "error", message: "No valid simulation cycles could be run with the provided inputs." }), {
+                status: 400,
+                headers: { ...corsHeaders, "Content-Type": "application/json" }
+            });
+        }
+
+        const simResults = processSimResults(allFinalValues, allFlexYears);
 
         // Async log telemetry to Supabase
         const visitId = payload.visit_id || (`api_${clientId}_` + Math.random().toString(36).substr(2, 9));
@@ -423,7 +450,10 @@ export default async (req) => {
                 age_at_fire: projection.ageAtFIRE,
                 savings_at_fire: projection.savingsAtFIRE,
                 success_rate: simResults.successRate,
-                median_value: simResults.medianValue
+                median_value: simResults.medianValue,
+                p10_value: simResults.p10Value,
+                p90_value: simResults.p90Value,
+                median_flex_years: simResults.medianFlexYears
             }
         }), {
             status: 200,
