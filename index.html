@@ -330,6 +330,27 @@
                 <div class="results-card"><h3>Savings at FIRE</h3><p id="savingsAtFIREResult" class="value"></p><p class="desc">Projected savings when FIRE is reached.</p></div>
                 <div class="results-card hidden" id="coastNumberCard"><h3>Coast FIRE Number</h3><p id="coastNumberResult" class="value"></p><p class="desc">Amount needed at Coast Age to reach FIRE by Target Age with no further savings.</p></div>
             </div>
+        <!-- Tabbed Projections toggle (collapsed by default) -->
+        <div class="mt-6 mb-2 non-printable">
+            <button id="toggleProjectionsButton" class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors group">
+                <span class="flex items-center gap-2 text-sm font-medium text-gray-500 group-hover:text-gray-700">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M3 6h18M3 18h18"/></svg>
+                    <span id="toggleProjectionsLabel">Show year-by-year breakdown</span>
+                </span>
+                <svg id="toggleProjectionsIcon" class="w-4 h-4 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="tabbedProjections" class="hidden mt-2">
+                <div class="flex border-b border-gray-300 non-printable">
+                    <button id="annualPreFireTabButton" class="tab-button active">Pre-FIRE (Annual)</button>
+                    <button id="monthlyPreFireTabButton" class="tab-button">Pre-FIRE (Monthly Detail)</button>
+                    <button id="postFireTabButton" class="tab-button">Post-FIRE Projection (Baseline)</button>
+                </div>
+                <div id="annualPreFireTabContent" class="tab-content"><h3 class="text-xl font-semibold text-blue-700 mb-3 mt-2">Annual Savings Growth (Pre-FIRE, Real Returns)</h3><div class="overflow-x-auto"><table id="annualProjectionTable" class="min-w-full"><thead><tr><th>Year</th><th>Age</th><th>Starting Savings</th><th>Contributions</th><th>Investment Growth (Real)</th><th>Events</th><th>Ending Savings</th></tr></thead><tbody id="annualProjectionTableBody"></tbody></table></div></div>
+                <div id="monthlyPreFireTabContent" class="tab-content hidden"><h3 class="text-xl font-semibold text-blue-700 mb-3 mt-2">Detailed Monthly Growth (First <span id="detailedMonthsCount"></span> Months Pre-FIRE)</h3><div class="overflow-x-auto"><table id="monthlyProjectionTable" class="min-w-full"><thead><tr><th>Month</th><th>Date</th><th>Age</th><th>Starting Savings</th><th>Contribution</th><th>Growth (Real)</th><th>Events</th><th>Ending Savings</th></tr></thead><tbody id="monthlyProjectionTableBody"></tbody></table></div></div>
+                <div id="postFireTabContent" class="tab-content hidden"><h3 class="text-xl font-semibold text-blue-700 mb-3 mt-2">Post-FIRE Annual Projection (Baseline Scenario - Real Values)</h3><p class="text-sm text-gray-600 mb-2">Based on Post-FIRE returns. Continues up to age 95 or until savings depleted.</p><div id="postFireWarningMessage" class="hidden warning-message"></div><div class="overflow-x-auto"><table id="postFireProjectionTable" class="min-w-full"><thead><tr><th>Year (Post-FIRE)</th><th>Age</th><th>Starting Savings</th><th>Growth (Real)</th><th>Net Withdrawal from Savings</th><th>Total Income Rec'd</th><th>Ending Savings</th></tr></thead><tbody id="postFireProjectionTableBody"></tbody></table></div></div>
+            </div>
+        </div>
+
 <div class="space-y-6 mt-8 mb-12 non-printable">
 
 <div id="timeCostWidget" class="bg-gradient-to-r from-indigo-50 to-white border border-indigo-100 rounded-xl p-6 shadow-sm">
@@ -387,31 +408,7 @@
         </div>
     </div>
 </div>
-    <div id="donationPromo" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-5 shadow-sm">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="flex items-start gap-4">
-                <div class="shrink-0 p-3 bg-white rounded-full text-amber-500 shadow-sm ring-1 ring-amber-100 hidden sm:block">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="text-base font-bold text-gray-900">
-                        Keep this tool free & fast
-                    </h3>
-                    <p class="text-gray-600 text-sm mt-1 leading-relaxed max-w-2xl">
-                        I built this to be the most accurate FIRE calculator on the web. If it helped you plan your future today, consider buying me a coffee to help cover the server costs.
-                    </p>
-                </div>
-            </div>
-            <a href="https://www.buymeacoffee.com/theficalculator" target="_blank" class="w-full md:w-auto shrink-0 bg-[#FFDD00] hover:bg-[#FFEA00] text-black font-bold py-3 px-6 rounded-lg shadow-sm hover:shadow-md transition-all flex items-center justify-center text-sm border border-yellow-400">
-                <span>Buy me a coffee</span>
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </a>
-        </div>
-    </div>
-
-    <div id="booksPromo" class="hidden mt-4 border border-gray-200 rounded-xl p-5 bg-gray-50">
+    <div id="booksPromo" class="hidden border border-gray-200 rounded-xl p-5 bg-gray-50">
         <p class="text-sm font-semibold text-gray-700 mb-3">Want to go deeper? The FIRE community's most recommended reads:</p>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <a href="https://amzn.to/4uRWD0F" target="_blank" rel="noopener" data-book="The Simple Path to Wealth" class="book-affiliate-link flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-sm transition-all no-underline">
@@ -441,20 +438,33 @@
         </div>
         <p class="text-gray-400 text-xs mt-3">As an Amazon Associate, The FI Calculator earns from qualifying purchases at no cost to you.</p>
     </div>
+    <div id="donationPromo" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-5 shadow-sm">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-start gap-4">
+                <div class="shrink-0 p-3 bg-white rounded-full text-amber-500 shadow-sm ring-1 ring-amber-100 hidden sm:block">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-gray-900">
+                        Keep this tool free & fast
+                    </h3>
+                    <p class="text-gray-600 text-sm mt-1 leading-relaxed max-w-2xl">
+                        I built this to be the most accurate FIRE calculator on the web. If it helped you plan your future today, consider buying me a coffee to help cover the server costs.
+                    </p>
+                </div>
+            </div>
+            <a href="https://www.buymeacoffee.com/theficalculator" target="_blank" class="w-full md:w-auto shrink-0 bg-[#FFDD00] hover:bg-[#FFEA00] text-black font-bold py-3 px-6 rounded-lg shadow-sm hover:shadow-md transition-all flex items-center justify-center text-sm border border-yellow-400">
+                <span>Buy me a coffee</span>
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
+        </div>
+    </div>
+
 
 </div>
         <div class="mt-8">
-            <!-- Tabbed Projections -->
-            <div class="mt-8">
-                <div class="flex border-b border-gray-300 non-printable">
-                    <button id="annualPreFireTabButton" class="tab-button active">Pre-FIRE (Annual)</button>
-                    <button id="monthlyPreFireTabButton" class="tab-button">Pre-FIRE (Monthly Detail)</button>
-                    <button id="postFireTabButton" class="tab-button">Post-FIRE Projection (Baseline)</button>
-                </div>
-                <div id="annualPreFireTabContent" class="tab-content"><h3 class="text-xl font-semibold text-blue-700 mb-3 mt-2">Annual Savings Growth (Pre-FIRE, Real Returns)</h3><div class="overflow-x-auto"><table id="annualProjectionTable" class="min-w-full"><thead><tr><th>Year</th><th>Age</th><th>Starting Savings</th><th>Contributions</th><th>Investment Growth (Real)</th><th>Events</th><th>Ending Savings</th></tr></thead><tbody id="annualProjectionTableBody"></tbody></table></div></div>
-                <div id="monthlyPreFireTabContent" class="tab-content hidden"><h3 class="text-xl font-semibold text-blue-700 mb-3 mt-2">Detailed Monthly Growth (First <span id="detailedMonthsCount"></span> Months Pre-FIRE)</h3><div class="overflow-x-auto"><table id="monthlyProjectionTable" class="min-w-full"><thead><tr><th>Month</th><th>Date</th><th>Age</th><th>Starting Savings</th><th>Contribution</th><th>Growth (Real)</th><th>Events</th><th>Ending Savings</th></tr></thead><tbody id="monthlyProjectionTableBody"></tbody></table></div></div>
-                <div id="postFireTabContent" class="tab-content hidden"><h3 class="text-xl font-semibold text-blue-700 mb-3 mt-2">Post-FIRE Annual Projection (Baseline Scenario - Real Values)</h3><p class="text-sm text-gray-600 mb-2">Based on Post-FIRE returns. Continues up to age 95 or until savings depleted.</p><div id="postFireWarningMessage" class="hidden warning-message"></div><div class="overflow-x-auto"><table id="postFireProjectionTable" class="min-w-full"><thead><tr><th>Year (Post-FIRE)</th><th>Age</th><th>Starting Savings</th><th>Growth (Real)</th><th>Net Withdrawal from Savings</th><th>Total Income Rec'd</th><th>Ending Savings</th></tr></thead><tbody id="postFireProjectionTableBody"></tbody></table></div></div>
-            </div>
             <!-- What-If Levers Section -->
             <div id="whatIfLeversSection" class="mt-10 p-6 bg-slate-50 rounded-lg border border-slate-200 shadow-sm non-printable">
                 <h3 class="text-xl font-semibold text-blue-700 mb-4">What-If Levers: Instantly See the Impact</h3>
