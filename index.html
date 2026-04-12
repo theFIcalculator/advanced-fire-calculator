@@ -320,9 +320,9 @@
              </p>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6" id="summaryCardsGrid">
                 <div class="results-card"><h3>Adjusted FIRE Number</h3><p id="fireNumberResult" class="value"></p><p class="desc">Savings for expenses not covered by post-FIRE income.</p></div>
-                <div class="results-card"><h3>Time to FIRE</h3><p id="timeToFIREResult" class="value"></p><p class="desc">Time to reach Adjusted FIRE Number.</p></div>
+                <div class="results-card"><h3 id="timeToFIRECardTitle">Time to FIRE</h3><p id="timeToFIREResult" class="value"></p><p class="desc" id="timeToFIREResultDesc">Time to reach Adjusted FIRE Number.</p></div>
                 <div class="results-card"><h3>Age at FIRE</h3><p id="ageAtFIREResult" class="value"></p><p class="desc">Your age when Adjusted FIRE Number is met.</p></div>
-                <div class="results-card"><h3>FI Date</h3><p id="fiDateResult" class="value"></p><p class="desc">Calendar date of reaching Adjusted FIRE Number.</p></div>
+                <div class="results-card"><h3 id="fiDateCardTitle">FI Date</h3><p id="fiDateResult" class="value"></p><p class="desc" id="fiDateResultDesc">Calendar date of reaching Adjusted FIRE Number.</p></div>
                 <div class="results-card"><h3>Savings Rate</h3><p id="savingsRateResult" class="value"></p><p class="desc">Percentage of gross income saved annually.</p></div>
                 <div class="results-card"><h3>Years of Expenses Covered (Current)</h3><p id="expensesCoveredResult" class="value"></p><p class="desc">Current savings cover this many years of retirement expenses.</p></div>
                 <div class="results-card"><h3>Total Contributions to FIRE</h3><p id="totalContributionsResult" class="value"></p><p class="desc">Total amount contributed until FIRE.</p></div>
@@ -345,7 +345,7 @@
                     <button id="monthlyPreFireTabButton" class="tab-button">Pre-FIRE (Monthly Detail)</button>
                     <button id="postFireTabButton" class="tab-button">Post-FIRE Projection (Baseline)</button>
                 </div>
-                <div id="annualPreFireTabContent" class="tab-content"><h3 class="text-xl font-semibold text-blue-700 mb-3 mt-2">Annual Savings Growth (Pre-FIRE, Real Returns)</h3><div class="overflow-x-auto"><table id="annualProjectionTable" class="min-w-full"><thead><tr><th>Year</th><th>Age</th><th>Starting Savings</th><th>Contributions</th><th>Investment Growth (Real)</th><th>Events</th><th>Ending Savings</th></tr></thead><tbody id="annualProjectionTableBody"></tbody></table></div></div>
+                <div id="annualPreFireTabContent" class="tab-content"><h3 id="annualTableTitle" class="text-xl font-semibold text-blue-700 mb-3 mt-2">Annual Savings Growth (Pre-FIRE, Real Returns)</h3><div class="overflow-x-auto"><table id="annualProjectionTable" class="min-w-full"><thead><tr><th>Year</th><th>Age</th><th>Starting Savings</th><th>Contributions</th><th>Investment Growth (Real)</th><th>Events</th><th>Ending Savings</th></tr></thead><tbody id="annualProjectionTableBody"></tbody></table></div></div>
                 <div id="monthlyPreFireTabContent" class="tab-content hidden"><h3 class="text-xl font-semibold text-blue-700 mb-3 mt-2">Detailed Monthly Growth (First <span id="detailedMonthsCount"></span> Months Pre-FIRE)</h3><div class="overflow-x-auto"><table id="monthlyProjectionTable" class="min-w-full"><thead><tr><th>Month</th><th>Date</th><th>Age</th><th>Starting Savings</th><th>Contribution</th><th>Growth (Real)</th><th>Events</th><th>Ending Savings</th></tr></thead><tbody id="monthlyProjectionTableBody"></tbody></table></div></div>
                 <div id="postFireTabContent" class="tab-content hidden"><h3 class="text-xl font-semibold text-blue-700 mb-3 mt-2">Post-FIRE Annual Projection (Baseline Scenario - Real Values)</h3><p class="text-sm text-gray-600 mb-2">Based on Post-FIRE returns. Continues up to age 95 or until savings depleted.</p><div id="postFireWarningMessage" class="hidden warning-message"></div><div class="overflow-x-auto"><table id="postFireProjectionTable" class="min-w-full"><thead><tr><th>Year (Post-FIRE)</th><th>Age</th><th>Starting Savings</th><th>Growth (Real)</th><th>Net Withdrawal from Savings</th><th>Total Income Rec'd</th><th>Ending Savings</th></tr></thead><tbody id="postFireProjectionTableBody"></tbody></table></div></div>
             </div>
@@ -733,6 +733,15 @@
     <ul class="space-y-3">
         <li class="flex items-start">
             <span class="shrink-0 h-2 w-2 mt-1.5 rounded-full bg-green-500 mr-3 animate-pulse"></span>
+            <div>
+                <p class="text-sm font-medium text-gray-700">Coast FIRE — Major Improvements</p>
+                <p class="text-xs text-gray-500">Now shows the actual date you can stop saving, when your FIRE number is truly hit during coasting, and a full pre-coast + coasting table breakdown. Retirement simulation also works in Coast mode.</p>
+            </div>
+            <span class="ml-auto text-xs text-gray-400">Apr 12, 2026</span>
+        </li>
+
+        <li class="flex items-start">
+            <span class="shrink-0 h-2 w-2 mt-1.5 rounded-full bg-gray-300 mr-3"></span>
             <div>
                 <p class="text-sm font-medium text-gray-700">AI Retirement Bot — Updated</p>
                 <p class="text-xs text-gray-500">Now models the true cost of daily habits, market crash scenarios, and major life events conversationally.</p>
