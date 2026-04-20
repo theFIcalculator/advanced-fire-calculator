@@ -148,6 +148,115 @@ input[type="radio"]:checked + .radio-label {
 .close-button { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
 .close-button:hover, .close-button:focus { color: black; text-decoration: none; }
 
+/* Dark Mode — Global Overrides */
+html.dark body { color: #e2e8f0; }
+html.dark a { color: #93c5fd; }
+html.dark a:hover { color: #bfdbfe; }
+html.dark h1, html.dark h2, html.dark h3, html.dark h4 { color: #f1f5f9; }
+html.dark p { color: #cbd5e1; }
+html.dark label { color: #cbd5e1; }
+html.dark input[type="number"],
+html.dark input[type="text"],
+html.dark input[type="month"],
+html.dark input[type="email"],
+html.dark input[type="range"],
+html.dark textarea,
+html.dark select {
+    background-color: #374151; border-color: #4b5563; color: #f1f5f9;
+}
+html.dark input::placeholder, html.dark textarea::placeholder { color: #6b7280; }
+html.dark button { color: inherit; }
+html.dark .text-gray-400 { color: #6b7280; }
+html.dark .text-gray-500 { color: #9ca3af; }
+html.dark .text-gray-600 { color: #9ca3af; }
+html.dark .text-gray-700 { color: #d1d5db; }
+html.dark .text-gray-800 { color: #e2e8f0; }
+html.dark .text-blue-700 { color: #93c5fd; }
+html.dark .text-blue-800 { color: #93c5fd; }
+html.dark .text-blue-600 { color: #60a5fa; }
+html.dark .text-indigo-600 { color: #a5b4fc; }
+html.dark .text-indigo-700 { color: #a5b4fc; }
+html.dark .text-red-600 { color: #fca5a5; }
+html.dark .text-red-700 { color: #fca5a5; }
+html.dark .text-green-700 { color: #6ee7b7; }
+html.dark .text-amber-700 { color: #fbbf24; }
+html.dark .bg-gray-50 { background-color: #1f2937; }
+html.dark .bg-gray-100 { background-color: #111827; }
+html.dark .bg-indigo-100 { background-color: rgba(67, 56, 202, 0.2); }
+html.dark .bg-green-100 { background-color: rgba(6, 78, 59, 0.3); }
+html.dark .bg-red-100 { background-color: rgba(127, 29, 29, 0.3); }
+html.dark .border-gray-200 { border-color: #374151; }
+html.dark .border-gray-300 { border-color: #4b5563; }
+html.dark .border-indigo-200 { border-color: #4338ca; }
+html.dark .bg-blue-50 { background-color: rgba(30, 58, 138, 0.15); }
+html.dark .bg-purple-50 { background-color: rgba(88, 28, 135, 0.15); }
+html.dark .bg-purple-100 { background-color: rgba(88, 28, 135, 0.25); }
+html.dark .bg-slate-50 { background-color: #1f2937; }
+html.dark .text-purple-700 { color: #c084fc; }
+html.dark .text-emerald-700 { color: #6ee7b7; }
+html.dark .text-blue-900 { color: #93c5fd; }
+html.dark .text-gray-900 { color: #f1f5f9; }
+html.dark .border-purple-200 { border-color: #6b21a8; }
+html.dark .border-slate-200 { border-color: #374151; }
+html.dark .border-blue-600 { border-color: #3b82f6; }
+html.dark .shadow-inner { box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3); }
+html.dark .text-amber-700 { color: #fbbf24; }
+html.dark .text-blue-600 { color: #60a5fa; }
+html.dark .hover\:text-blue-800:hover { color: #93c5fd; }
+html.dark .text-gray-400 { color: #6b7280; }
+html.dark .bg-gray-300 { background-color: #4b5563; }
+html.dark .border-blue-200 { border-color: #1e3a8a; }
+html.dark .border-purple-500 { border-color: #7c3aed; }
+
+/* Dark Mode — Specific Component Overrides */
+html.dark .input-group label { color: #cbd5e1; }
+html.dark .input-group input[type="number"],
+html.dark .input-group input[type="text"],
+html.dark .input-group select {
+    background-color: #374151; border-color: #4b5563; color: #f1f5f9;
+}
+html.dark .input-group input[type="number"]:focus,
+html.dark .input-group select:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
+}
+html.dark .results-card { background-color: rgba(30, 58, 138, 0.2); border-left-color: #60a5fa; }
+html.dark .results-card h3 { color: #93c5fd; }
+html.dark .results-card p.value { color: #f1f5f9; }
+html.dark .results-card p.desc { color: #94a3b8; }
+html.dark .sim-results-card { background-color: rgba(67, 56, 202, 0.15); border-left-color: #818cf8; }
+html.dark .sim-results-card h3 { color: #a5b4fc; }
+html.dark .sim-results-card p.value { color: #f1f5f9; }
+html.dark .sim-results-card p.desc { color: #a5b4fc; }
+html.dark table { border-color: #374151; }
+html.dark th { background-color: #1f2937; color: #d1d5db; border-color: #374151; }
+html.dark td { color: #d1d5db; border-color: #374151; }
+html.dark .tab-button { background-color: #374151; color: #9ca3af; border-color: #4b5563; }
+html.dark .tab-button.active { background-color: #1f2937; color: #60a5fa; border-bottom-color: #1f2937; }
+html.dark .tab-content { border-color: #4b5563; background-color: #1f2937; }
+html.dark .input-section-title { color: #d1d5db; border-bottom-color: #4b5563; }
+html.dark .scenario-section-title { color: #60a5fa; border-bottom-color: #3b82f6; }
+html.dark .section-explanation { color: #9ca3af; }
+html.dark #retirementSimulationSection,
+html.dark #oneMoreYearSection,
+html.dark #earlyRetirementIncomeSection { border-top-color: #3b82f6; }
+html.dark .error-message { color: #fca5a5; background-color: rgba(127, 29, 29, 0.3); border-color: #dc2626; }
+html.dark .warning-message { color: #fdba74; background-color: rgba(120, 53, 15, 0.3); border-color: #d97706; }
+html.dark .modal-content { background-color: #1f2937; border-color: #4b5563; color: #f1f5f9; }
+html.dark .modal-content textarea { background-color: #374151; color: #f1f5f9; border-color: #4b5563; }
+html.dark .close-button { color: #6b7280; }
+html.dark .close-button:hover, html.dark .close-button:focus { color: #d1d5db; }
+html.dark .preset-button { background-color: #374151; border-color: #4b5563; color: #d1d5db; }
+html.dark .preset-button:hover { background-color: #4b5563; }
+html.dark .radio-label { background-color: #374151; border-color: #4b5563; color: #d1d5db; }
+html.dark input[type="radio"]:checked + .radio-label { background-color: #4f46e5; color: white; border-color: #4f46e5; }
+html.dark .ai-output { background-color: #1e293b; border-color: #334155; color: #e2e8f0; }
+html.dark .axis-label { fill: #9ca3af; }
+html.dark .plot-title { fill: #93c5fd; }
+html.dark .grid .tick line { stroke: #374151; }
+html.dark .axis path, html.dark .axis line { stroke: #6b7280; }
+html.dark .axis text { fill: #9ca3af; }
+
 @media print {
     body * {
         visibility: hidden;

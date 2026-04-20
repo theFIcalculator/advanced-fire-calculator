@@ -1,27 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
     <head>
+        <script>
+            // Apply dark mode only if user explicitly chose it
+            (function() {
+                if (localStorage.getItem('theme') === 'dark') {
+                    document.documentElement.classList.add('dark');
+                }
+            })();
+        </script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-        <title>The FI Calculator</title>
-    
-        <meta name="description" content="Plan your journey to Financial Independence and stress-test your portfolio with historical data and Monte Carlo simulations.">
-        <meta property="og:title" content="The FI Calculator">
-        <meta property="og:description" content="Plan your journey to Financial Independence and stress-test your portfolio with historical data and Monte Carlo simulations.">
+        <title>FIRE Calculator — Free Early Retirement Planner | The FI Calculator</title>
+
+        <meta name="description" content="Free FIRE calculator with Monte Carlo simulations, historical backtesting, Coast FIRE, and One More Year analysis. Plan your early retirement with real market data.">
+        <meta property="og:title" content="FIRE Calculator — Free Early Retirement Planner | The FI Calculator">
+        <meta property="og:description" content="Free FIRE calculator with Monte Carlo simulations, historical backtesting, Coast FIRE, and One More Year analysis. Plan your early retirement with real market data.">
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://theficalculator.com/">
         <meta property="og:image" content="https://theficalculator.com/social-preview-image.png">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="The FI Calculator">
-        <meta name="twitter:description" content="Plan your journey to Financial Independence and stress-test your portfolio with historical data and Monte Carlo simulations.">
+        <meta name="twitter:title" content="FIRE Calculator — Free Early Retirement Planner | The FI Calculator">
+        <meta name="twitter:description" content="Free FIRE calculator with Monte Carlo simulations, historical backtesting, Coast FIRE, and One More Year analysis. Plan your early retirement with real market data.">
         <meta name="twitter:image" content="https://theficalculator.com/social-preview-image.png">
-    
+
         <link rel="canonical" href="https://theficalculator.com/">
         <link rel="icon" type="image/png" href="/favicon.png">
-    
-        
+
+        <link rel="preconnect" href="https://cdn.tailwindcss.com">
+        <link rel="preconnect" href="https://d3js.org">
         <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = { darkMode: 'class' };
+        </script>
         <script src="https://d3js.org/d3.v7.min.js"></script>
         <script src="script.js" defer></script>
         <script type="application/ld+json">
@@ -69,45 +81,49 @@
         <link rel="stylesheet" href="style.css">
     
     </head>
-<body class="bg-gray-100 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
-    <div class="container mx-auto max-w-5xl bg-white p-6 sm:p-8 rounded-xl shadow-lg print-container">
-        <header class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold text-blue-700">The FI Calculator</h1>
-            <p class="text-gray-600 mt-2">Plan your journey to Financial Independence and stress-test your portfolio against market volatility.</p>
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen py-8 px-4 sm:px-6 lg:px-8 dark:text-gray-100 transition-colors duration-200">
+    <div class="container mx-auto max-w-5xl bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg print-container transition-colors duration-200">
+        <header class="text-center mb-8 relative">
+            <button id="darkModeToggle" class="absolute top-0 right-0 p-2 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="Toggle dark mode">
+                <svg id="darkModeIconSun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="darkModeIconMoon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+            <h1 class="text-3xl sm:text-4xl font-bold text-blue-700 dark:text-blue-400">The FI Calculator</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-2">Plan your journey to Financial Independence and stress-test your portfolio against market volatility.</p>
             
             <!-- AI GPT Beta Banner -->
-            <div class="mt-6 inline-flex items-center gap-3 bg-indigo-50 border border-indigo-100 rounded-full px-4 py-2 text-sm text-indigo-700 font-medium animate-fade-in shadow-sm hover:shadow-md transition-all">
+            <div class="mt-6 inline-flex items-center gap-3 bg-indigo-50 dark:bg-indigo-900/40 border border-indigo-100 dark:border-indigo-800 rounded-full px-4 py-2 text-sm text-indigo-700 dark:text-indigo-300 font-medium animate-fade-in shadow-sm hover:shadow-md transition-all">
                 <span class="bg-indigo-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wide">New</span>
                 <span>AI Retirement Bot updated — now models habits, crashes & life events</span>
                 <a href="https://chatgpt.com/g/g-69b57dc2922481919efe83284c3acc4f-fire-early-retirement-planner/" target="_blank" id="gptBannerLink" class="text-indigo-600 font-bold underline hover:text-indigo-800 ml-1">Try it on ChatGPT →</a>
             </div>
 
-            <p class="text-sm text-gray-500 mt-6 max-w-3xl mx-auto">Financial Independence, Retire Early (FIRE) is a movement dedicated to achieving financial freedom long before traditional retirement age. This calculator helps you map out your journey. <a href="/guide" class="text-blue-500 hover:underline">New to FIRE? Read the guide →</a></p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-6 max-w-3xl mx-auto">Financial Independence, Retire Early (FIRE) is a movement dedicated to achieving financial freedom long before traditional retirement age. This calculator helps you map out your journey. <a href="/guide" class="text-blue-500 dark:text-blue-400 hover:underline">New to FIRE? Read the guide →</a></p>
         </header>
-        <nav id="stickyNav" class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm transition-all duration-300 transform -translate-y-full opacity-0 hidden md:block pointer-events-none">
+        <nav id="stickyNav" class="sticky top-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm transition-all duration-300 transform -translate-y-full opacity-0 hidden md:block pointer-events-none">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-14">
             <span class="font-bold text-blue-700 text-sm">FI Calculator</span>
             <div class="flex space-x-1">
-                <a href="#resultsSection" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
+                <a href="#resultsSection" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors">
                     Snapshot
                 </a>
-                <a href="#timeCostWidget" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
+                <a href="#timeCostWidget" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors">
                     Time-Cost
                 </a>
-                <a href="#oneMoreYearSection" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
+                <a href="#oneMoreYearSection" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors">
                     One More Year
                 </a>
-                <a href="#earlyRetirementIncomeSection" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
+                <a href="#earlyRetirementIncomeSection" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors">
                     Income Plot
                 </a>
-                <a href="#retirementSimulationSection" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
+                <a href="#retirementSimulationSection" class="px-3 py-2 text-xs font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors">
                     Simulation
                 </a>
             </div>
             <div class="flex items-center gap-2">
                 <a href="/guide" class="text-xs font-medium text-gray-500 hover:text-blue-600 transition-colors">Guide</a>
-                <a href="#inputsSection" class="text-xs font-bold text-blue-600 border border-blue-600 px-3 py-1.5 rounded hover:bg-blue-50 transition-colors">
+                <a href="#inputsSection" class="text-xs font-bold text-blue-600 border border-blue-600 px-3 py-1.5 rounded hover:bg-blue-50 dark:hover:bg-blue-900/30 dark:text-blue-400 dark:border-blue-500 transition-colors">
                     Edit Inputs
                 </a>
             </div>
@@ -122,14 +138,14 @@
         <div class="non-printable">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                 <div>
-             <h2 class="text-2xl font-semibold text-gray-800 mb-2">1. Your Financial Snapshot & Goals</h2>
+             <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">1. Your Financial Snapshot & Goals</h2>
              <p class="section-explanation">
                 Start by entering your current financial details and your desired retirement lifestyle. This information is used to calculate your basic FIRE (Financial Independence, Retire Early) number and a baseline projection for when you might reach it.
              </p>
                 </div>
                 <div class="mt-2 md:mt-0">
-                    <label class="font-semibold text-gray-700 mr-2">FIRE Mode:</label>
-                    <select id="fireMode" class="border rounded px-2 py-1">
+                    <label class="font-semibold text-gray-700 dark:text-gray-300 mr-2">FIRE Mode:</label>
+                    <select id="fireMode" class="border rounded px-2 py-1 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
                         <option value="normal">Normal</option>
                         <option value="coast">Coast FIRE</option>
                     </select>
@@ -143,36 +159,36 @@
             <div id="eventsList" class="mb-4"></div>
             <form id="addEventForm" class="flex flex-wrap gap-4 items-end">
                 <div>
-                    <label for="eventType" class="block text-sm font-medium text-gray-700">Type</label>
-                    <select id="eventType" class="border rounded px-2 py-1">
+                    <label for="eventType" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
+                    <select id="eventType" class="border rounded px-2 py-1 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
                         <option value="expense">Expense</option>
                         <option value="income">Income</option>
                     </select>
                 </div>
                 <div>
-                    <label for="eventDescription" class="block text-sm font-medium text-gray-700">Description</label>
-                    <input type="text" id="eventDescription" placeholder="e.g., Pension" class="border rounded px-2 py-1" style="min-width:120px;">
+                    <label for="eventDescription" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                    <input type="text" id="eventDescription" placeholder="e.g., Pension" class="border rounded px-2 py-1 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" style="min-width:120px;">
                 </div>
                 <div>
-                    <label for="eventAmount" class="block text-sm font-medium text-gray-700">Amount (per year)</label>
-                    <input type="number" id="eventAmount" placeholder="e.g., 20000" class="border rounded px-2 py-1" style="width:120px;">
+                    <label for="eventAmount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount (per year)</label>
+                    <input type="number" id="eventAmount" placeholder="e.g., 20000" class="border rounded px-2 py-1 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" style="width:120px;">
                 </div>
                 <div>
-                    <label for="eventStartAge" class="block text-sm font-medium text-gray-700">Start Age</label>
-                    <input type="number" id="eventStartAge" placeholder="e.g., 65" class="border rounded px-2 py-1" style="width:100px;">
+                    <label for="eventStartAge" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Start Age</label>
+                    <input type="number" id="eventStartAge" placeholder="e.g., 65" class="border rounded px-2 py-1 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" style="width:100px;">
                 </div>
                 <div>
-                    <label for="eventEndAge" class="block text-sm font-medium text-gray-700">End Age (optional)
+                    <label for="eventEndAge" class="block text-sm font-medium text-gray-700 dark:text-gray-300">End Age (optional)
                         <span class="tooltip text-gray-400 font-normal">(?)
                             <span class="tooltiptext" style="width: 250px; text-align: left;">
                                 Leave blank for a single-year event. If you enter an end age, the event will apply up to and INCLUDING that age.
                             </span>
                         </span>
                     </label>
-                    <input type="number" id="eventEndAge" placeholder="e.g., 95" class="border rounded px-2 py-1" style="width:100px;">
+                    <input type="number" id="eventEndAge" placeholder="e.g., 95" class="border rounded px-2 py-1 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" style="width:100px;">
                 </div>
                 <div id="inflationAdjustedSection" class="pt-2">
-                    <label for="eventInflationAdjusted" class="flex items-center text-sm font-medium text-gray-700">
+                    <label for="eventInflationAdjusted" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
                         <input type="checkbox" id="eventInflationAdjusted" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
                         Inflation Adjusted?
                         <span class="tooltip text-gray-400 font-normal ml-1">(?)
@@ -308,6 +324,7 @@
         <div class="mt-8 text-center non-printable">
             <button id="calculateButton" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md">Calculate Projection</button>
             <button id="resetButton" class="ml-4 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md">Reset</button>
+            <button id="clearSavedDataButton" class="ml-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md text-sm">Clear Saved Data</button>
             <button id="exportDataButton" class="ml-4 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hidden">Export Data</button>
             <button id="printSummaryButton" class="ml-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hidden">Print Summary</button>
         </div>
@@ -332,7 +349,7 @@
             </div>
         <!-- Tabbed Projections toggle (collapsed by default) -->
         <div class="mt-6 mb-2 non-printable">
-            <button id="toggleProjectionsButton" class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors group">
+            <button id="toggleProjectionsButton" class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 rounded-lg transition-colors group">
                 <span class="flex items-center gap-2 text-sm font-medium text-gray-500 group-hover:text-gray-700">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M3 6h18M3 18h18"/></svg>
                     <span id="toggleProjectionsLabel">Show year-by-year breakdown</span>
@@ -340,24 +357,24 @@
                 <svg id="toggleProjectionsIcon" class="w-4 h-4 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </button>
             <div id="tabbedProjections" class="hidden mt-2">
-                <div class="flex border-b border-gray-300 non-printable">
+                <div class="flex border-b border-gray-300 dark:border-gray-600 non-printable">
                     <button id="annualPreFireTabButton" class="tab-button active">Pre-FIRE (Annual)</button>
                     <button id="monthlyPreFireTabButton" class="tab-button">Pre-FIRE (Monthly Detail)</button>
                     <button id="postFireTabButton" class="tab-button">Post-FIRE Projection (Baseline)</button>
                 </div>
                 <div id="annualPreFireTabContent" class="tab-content"><h3 id="annualTableTitle" class="text-xl font-semibold text-blue-700 mb-3 mt-2">Annual Savings Growth (Pre-FIRE, Real Returns)</h3><div class="overflow-x-auto"><table id="annualProjectionTable" class="min-w-full"><thead><tr><th>Year</th><th>Age</th><th>Starting Savings</th><th>Contributions</th><th>Investment Growth (Real)</th><th>Events</th><th>Ending Savings</th></tr></thead><tbody id="annualProjectionTableBody"></tbody></table></div></div>
                 <div id="monthlyPreFireTabContent" class="tab-content hidden"><h3 class="text-xl font-semibold text-blue-700 mb-3 mt-2">Detailed Monthly Growth (First <span id="detailedMonthsCount"></span> Months Pre-FIRE)</h3><div class="overflow-x-auto"><table id="monthlyProjectionTable" class="min-w-full"><thead><tr><th>Month</th><th>Date</th><th>Age</th><th>Starting Savings</th><th>Contribution</th><th>Growth (Real)</th><th>Events</th><th>Ending Savings</th></tr></thead><tbody id="monthlyProjectionTableBody"></tbody></table></div></div>
-                <div id="postFireTabContent" class="tab-content hidden"><h3 class="text-xl font-semibold text-blue-700 mb-3 mt-2">Post-FIRE Annual Projection (Baseline Scenario - Real Values)</h3><p class="text-sm text-gray-600 mb-2">Based on Post-FIRE returns. Continues up to age 95 or until savings depleted.</p><div id="postFireWarningMessage" class="hidden warning-message"></div><div class="overflow-x-auto"><table id="postFireProjectionTable" class="min-w-full"><thead><tr><th>Year (Post-FIRE)</th><th>Age</th><th>Starting Savings</th><th>Growth (Real)</th><th>Net Withdrawal from Savings</th><th>Total Income Rec'd</th><th>Ending Savings</th></tr></thead><tbody id="postFireProjectionTableBody"></tbody></table></div></div>
+                <div id="postFireTabContent" class="tab-content hidden"><h3 class="text-xl font-semibold text-blue-700 mb-3 mt-2">Post-FIRE Annual Projection (Baseline Scenario - Real Values)</h3><p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Based on Post-FIRE returns. Continues up to age 95 or until savings depleted.</p><div id="postFireWarningMessage" class="hidden warning-message"></div><div class="overflow-x-auto"><table id="postFireProjectionTable" class="min-w-full"><thead><tr><th>Year (Post-FIRE)</th><th>Age</th><th>Starting Savings</th><th>Growth (Real)</th><th>Net Withdrawal from Savings</th><th>Total Income Rec'd</th><th>Ending Savings</th></tr></thead><tbody id="postFireProjectionTableBody"></tbody></table></div></div>
             </div>
         </div>
 
 <div class="space-y-6 mt-8 mb-12 non-printable">
 
-<div id="timeCostWidget" class="bg-gradient-to-r from-indigo-50 to-white border border-indigo-100 rounded-xl p-6 shadow-sm">
+<div id="timeCostWidget" class="bg-gradient-to-r from-indigo-50 to-white dark:from-indigo-900/20 dark:to-gray-800 border border-indigo-100 dark:border-indigo-800 rounded-xl p-6 shadow-sm">
     <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
         <div class="flex-grow w-full lg:w-auto">
             <div class="flex items-center gap-2 mb-2">
-                <div class="p-1.5 bg-indigo-100 rounded-lg text-indigo-600">
+                <div class="p-1.5 bg-indigo-100 dark:bg-indigo-900/40 rounded-lg text-indigo-600 dark:text-indigo-400">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <h3 class="text-lg font-bold text-gray-800 flex items-center">
@@ -374,16 +391,16 @@
             <div class="flex flex-col sm:flex-row gap-3 mb-3">
                 <div class="relative flex-grow">
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🛒</span>
-                    <input type="text" id="purchaseName" placeholder="e.g. Daily Starbucks" class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                    <input type="text" id="purchaseName" placeholder="e.g. Daily Starbucks" class="w-full pl-9 pr-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 shadow-sm">
                 </div>
                 <div class="relative w-full sm:w-40">
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-semibold">$</span>
-                    <input type="number" id="purchasePrice" placeholder="Price" class="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                    <input type="number" id="purchasePrice" placeholder="Price" class="w-full pl-7 pr-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 shadow-sm">
                 </div>
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3">
-                <select id="purchaseFreq" class="w-full sm:w-1/3 py-2 px-3 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                <select id="purchaseFreq" class="w-full sm:w-1/3 py-2 px-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 shadow-sm">
                     <option value="once">One-Time Purchase</option>
                     <option value="daily">Daily Habit</option>
                     <option value="weekly">Weekly Habit</option>
@@ -392,7 +409,7 @@
                 </select>
                 
                 <div class="relative w-full sm:w-1/3">
-                    <input type="month" id="purchaseStartDate" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 shadow-sm text-gray-600">
+                    <input type="month" id="purchaseStartDate" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 shadow-sm text-gray-600">
                 </div>
 
                 <button id="calcTimeCostBtn" class="w-full sm:w-1/3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-all text-sm">
@@ -401,17 +418,17 @@
             </div>
         </div>
         
-        <div id="timeCostResult" class="hidden shrink-0 bg-white border border-indigo-100 p-5 rounded-xl shadow-md text-center min-w-[220px] transform transition-all">
+        <div id="timeCostResult" class="hidden shrink-0 bg-white dark:bg-gray-700 border border-indigo-100 dark:border-indigo-800 p-5 rounded-xl shadow-md text-center min-w-[220px] transform transition-all">
             <span class="block text-xs text-gray-500 uppercase tracking-wider font-bold mb-1">This costs you</span>
             <span id="timeCostValue" class="block text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500 my-1">--</span>
             <span class="block text-xs text-gray-400 font-medium">of extra working time</span>
         </div>
     </div>
 </div>
-    <div id="booksPromo" class="hidden border border-gray-200 rounded-xl p-5 bg-gray-50">
-        <p class="text-sm font-semibold text-gray-700 mb-3">Want to go deeper? The FIRE community's most recommended reads:</p>
+    <div id="booksPromo" class="hidden border border-gray-200 dark:border-gray-600 rounded-xl p-5 bg-gray-50 dark:bg-gray-700">
+        <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Want to go deeper? The FIRE community's most recommended reads:</p>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <a href="https://amzn.to/4uRWD0F" target="_blank" rel="noopener" data-book="The Simple Path to Wealth" class="book-affiliate-link flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-sm transition-all no-underline">
+            <a href="https://amzn.to/4uRWD0F" target="_blank" rel="noopener" data-book="The Simple Path to Wealth" class="book-affiliate-link flex items-center gap-3 p-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-sm transition-all no-underline">
                 <div class="shrink-0 text-2xl">📗</div>
                 <div>
                     <p class="text-sm font-semibold text-gray-800 leading-tight">The Simple Path to Wealth</p>
@@ -419,7 +436,7 @@
                     <p class="text-xs text-blue-600 mt-1">View on Amazon →</p>
                 </div>
             </a>
-            <a href="https://amzn.to/4uYnRCX" target="_blank" rel="noopener" data-book="The Psychology of Money" class="book-affiliate-link flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-sm transition-all no-underline">
+            <a href="https://amzn.to/4uYnRCX" target="_blank" rel="noopener" data-book="The Psychology of Money" class="book-affiliate-link flex items-center gap-3 p-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-sm transition-all no-underline">
                 <div class="shrink-0 text-2xl">📘</div>
                 <div>
                     <p class="text-sm font-semibold text-gray-800 leading-tight">The Psychology of Money</p>
@@ -427,7 +444,7 @@
                     <p class="text-xs text-blue-600 mt-1">View on Amazon →</p>
                 </div>
             </a>
-            <a href="https://amzn.to/4lXGdzT" target="_blank" rel="noopener" data-book="Die With Zero" class="book-affiliate-link flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-sm transition-all no-underline">
+            <a href="https://amzn.to/4lXGdzT" target="_blank" rel="noopener" data-book="Die With Zero" class="book-affiliate-link flex items-center gap-3 p-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-sm transition-all no-underline">
                 <div class="shrink-0 text-2xl">📙</div>
                 <div>
                     <p class="text-sm font-semibold text-gray-800 leading-tight">Die With Zero</p>
@@ -438,16 +455,16 @@
         </div>
         <p class="text-gray-400 text-xs mt-3">As an Amazon Associate, The FI Calculator earns from qualifying purchases at no cost to you.</p>
     </div>
-    <div id="donationPromo" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-5 shadow-sm">
+    <div id="donationPromo" class="hidden bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5 shadow-sm">
         <div class="flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="flex items-start gap-4">
-                <div class="shrink-0 p-3 bg-white rounded-full text-amber-500 shadow-sm ring-1 ring-amber-100 hidden sm:block">
+                <div class="shrink-0 p-3 bg-white dark:bg-gray-700 rounded-full text-amber-500 shadow-sm ring-1 ring-amber-100 dark:ring-amber-800 hidden sm:block">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-base font-bold text-gray-900">
+                    <h3 class="text-base font-bold text-gray-900 dark:text-gray-100">
                         Keep this tool free & fast
                     </h3>
                     <p class="text-gray-600 text-sm mt-1 leading-relaxed max-w-2xl">
@@ -466,29 +483,29 @@
 </div>
         <div class="mt-8">
             <!-- What-If Levers Section -->
-            <div id="whatIfLeversSection" class="mt-10 p-6 bg-slate-50 rounded-lg border border-slate-200 shadow-sm non-printable">
+            <div id="whatIfLeversSection" class="mt-10 p-6 bg-slate-50 dark:bg-gray-700/50 rounded-lg border border-slate-200 dark:border-gray-600 shadow-sm non-printable">
                 <h3 class="text-xl font-semibold text-blue-700 mb-4">What-If Levers: Instantly See the Impact</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                     <div>
-                        <label for="whatIfSavings" class="block font-medium text-gray-700 mb-1">Yearly Savings Contribution</label>
+                        <label for="whatIfSavings" class="block font-medium text-gray-700 dark:text-gray-300 mb-1">Yearly Savings Contribution</label>
                         <input type="range" id="whatIfSavings" min="0" step="500" class="w-full">
-                        <div class="text-sm text-gray-600 mt-1">Current: <span id="whatIfSavingsValue">15,000</span></div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Current: <span id="whatIfSavingsValue">15,000</span></div>
                     </div>
                     <div>
-                        <label for="whatIfRetireExpenses" class="block font-medium text-gray-700 mb-1">Yearly Retirement Expenses</label>
+                        <label for="whatIfRetireExpenses" class="block font-medium text-gray-700 dark:text-gray-300 mb-1">Yearly Retirement Expenses</label>
                         <input type="range" id="whatIfRetireExpenses" min="10000" step="1000" class="w-full">
-                        <div class="text-sm text-gray-600 mt-1">Current: <span id="whatIfRetireExpensesValue">40,000</span></div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Current: <span id="whatIfRetireExpensesValue">40,000</span></div>
                     </div>
                     <div>
-                        <label for="whatIfMonthlyIncome" class="block font-medium text-gray-700 mb-1">Monthly Income After FIRE</label>
+                        <label for="whatIfMonthlyIncome" class="block font-medium text-gray-700 dark:text-gray-300 mb-1">Monthly Income After FIRE</label>
                         <input type="range" id="whatIfMonthlyIncome" min="0" step="100" class="w-full">
-                        <div class="text-sm text-gray-600 mt-1">Current: <span id="whatIfMonthlyIncomeValue">0</span></div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Current: <span id="whatIfMonthlyIncomeValue">0</span></div>
                     </div>
                 </div>
                 <div class="flex flex-col items-center mt-4">
-                    <div class="bg-white border border-blue-200 rounded-lg px-6 py-4 shadow text-center">
+                    <div class="bg-white dark:bg-gray-700 border border-blue-200 dark:border-blue-800 rounded-lg px-6 py-4 shadow text-center">
                         <div class="text-lg font-semibold text-blue-700" id="whatIfResultLabel">Projected FIRE Age</div>
-                        <div class="text-3xl font-bold text-blue-900 mt-1" id="whatIfResultValue">--</div>
+                        <div class="text-3xl font-bold text-blue-900 dark:text-blue-300 mt-1" id="whatIfResultValue">--</div>
                     </div>
                 </div>
             </div>
@@ -496,7 +513,7 @@
 
         <!-- "One More Year" Scenario Section -->
         <div id="oneMoreYearSection" class="hidden page-break">
-            <h2 class="scenario-section-title text-purple-700 mb-2 text-center">3. "One More Year" Scenario Analysis</h2>
+            <h2 class="scenario-section-title text-purple-700 dark:text-purple-400 mb-2 text-center">3. "One More Year" Scenario Analysis</h2>
             <p class="section-explanation text-center max-w-3xl mx-auto non-printable">
                This section helps you quantify the financial benefit of working a few extra years past your projected FIRE date. See how it impacts your final portfolio value and the lifestyle it can support.
             </p>
@@ -516,25 +533,25 @@
                     <button id="runOneMoreYearButton" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 px-6 rounded-lg shadow-md w-full">Calculate</button>
                 </div>
             </div>
-            <div id="oneMoreYearResultsContainer" class="hidden mt-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                 <h3 class="text-xl font-semibold text-purple-700 mb-3 text-center">Impact of Working <span id="extraYearsDisplay">1</span> Extra Year(s)</h3>
+            <div id="oneMoreYearResultsContainer" class="hidden mt-6 p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+                 <h3 class="text-xl font-semibold text-purple-700 dark:text-purple-400 mb-3 text-center">Impact of Working <span id="extraYearsDisplay">1</span> Extra Year(s)</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="results-card bg-purple-100 border-purple-500">
+                    <div class="results-card bg-purple-100 dark:bg-purple-900/30 border-purple-500">
                         <h3>New Portfolio Value at Retirement</h3>
                         <p id="omyPortfolioValue" class="value"></p>
                         <p class="desc">Projected total savings after extra working years.</p>
                     </div>
-                    <div class="results-card bg-purple-100 border-purple-500">
+                    <div class="results-card bg-purple-100 dark:bg-purple-900/30 border-purple-500">
                         <h3>New Retirement Age</h3>
                         <p id="omyRetirementAge" class="value"></p>
                         <p class="desc">Your age after working extra years.</p>
                     </div>
-                    <div class="results-card bg-purple-100 border-purple-500">
+                    <div class="results-card bg-purple-100 dark:bg-purple-900/30 border-purple-500">
                         <h3>Increased Yearly Spending Possible</h3>
                         <p id="omyIncreasedSpending" class="value"></p>
                         <p class="desc">If maintaining original withdrawal rate and retirement duration to age 95.</p>
                     </div>
-                     <div class="results-card bg-purple-100 border-purple-500">
+                     <div class="results-card bg-purple-100 dark:bg-purple-900/30 border-purple-500">
                         <h3>Or, Funds Last Until Age</h3>
                         <p id="omyFundsLastUntil" class="value"></p>
                         <p class="desc">If maintaining original spending level (projects up to age 95).</p>
@@ -545,7 +562,7 @@
         
         <!-- Early Retirement Income Section -->
         <div id="earlyRetirementIncomeSection" class="hidden mt-12 pt-6 border-t-2 border-emerald-400">
-            <h2 class="scenario-section-title text-emerald-700 mb-6 text-center">4. Potential Early Retirement Income & Capital Growth</h2>
+            <h2 class="scenario-section-title text-emerald-700 dark:text-emerald-400 mb-6 text-center">4. Potential Early Retirement Income & Capital Growth</h2>
             <p class="text-center text-gray-600 mb-4">This chart shows how different savings rates impact your accumulated capital (dashed lines, right axis) and the sustainable monthly income it could generate (solid lines, left axis).</p>
              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 mb-6 max-w-5xl mx-auto items-end non-printable">
                 <div class="input-group">
@@ -573,7 +590,7 @@
                     <button id="runEarlyRetirementPlotButton" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-6 rounded-lg shadow-md w-full">Update Plot</button>
                 </div>
             </div>
-            <div id="earlyRetirementPlotContainer" class="mb-8 w-full max-w-4xl mx-auto bg-white p-2 rounded shadow"></div>
+            <div id="earlyRetirementPlotContainer" class="mb-8 w-full max-w-4xl mx-auto bg-white dark:bg-gray-800 p-2 rounded shadow"></div>
         </div>
         
         <!-- Advanced Retirement Simulation Section -->
@@ -586,12 +603,12 @@
             </p>
             <div id="simulationErrorMessage" class="hidden error-message non-printable"></div>
             
-            <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8 non-printable">
+            <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg shadow-inner mb-8 non-printable">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 items-start">
                     <!-- Column 1: Simulation Type and Core Inputs -->
                     <div>
                         <div class="input-group">
-                             <label class="font-semibold text-gray-700">1. Select Simulation Type</label>
+                             <label class="font-semibold text-gray-700 dark:text-gray-300">1. Select Simulation Type</label>
                              <div class="mt-2 flex space-x-4">
                                 <div>
                                     <input type="radio" name="simType" id="simTypeMonteCarlo" value="monteCarlo" class="hidden">
@@ -604,22 +621,22 @@
                             </div>
                         </div>
                         <div class="input-group mt-6">
-                            <label for="simPortfolioValue" class="font-semibold text-gray-700">2. Retirement Portfolio</label>
+                            <label for="simPortfolioValue" class="font-semibold text-gray-700 dark:text-gray-300">2. Retirement Portfolio</label>
                             <input type="number" id="simPortfolioValue" step="1000">
                         </div>
                          <div class="input-group">
-                            <label for="simYearlyExpenses" class="font-semibold text-gray-700">3. Yearly Expenses in Retirement</label>
+                            <label for="simYearlyExpenses" class="font-semibold text-gray-700 dark:text-gray-300">3. Yearly Expenses in Retirement</label>
                             <input type="number" id="simYearlyExpenses" step="1000">
                         </div>
                         <div class="input-group">
-                            <label for="simRetirementAge" class="font-semibold text-gray-700">4. Retirement Age</label>
+                            <label for="simRetirementAge" class="font-semibold text-gray-700 dark:text-gray-300">4. Retirement Age</label>
                             <input type="number" id="simRetirementAge" step="1">
                         </div>
                     </div>
                     <!-- Column 2: Parameters -->
                     <div>
                         <div id="monteCarloParams" class="hidden">
-                             <label class="font-semibold text-gray-700">Monte Carlo Parameters</label>
+                             <label class="font-semibold text-gray-700 dark:text-gray-300">Monte Carlo Parameters</label>
                              <div class="space-y-4 mt-2">
                                 <div class="input-group">
                                     <label for="simReturn">Nominal Return (%) <span class="text-xs text-gray-500 font-normal">(Before Inflation)</span></label>
@@ -644,7 +661,7 @@
                             </div>
                         </div>
                         <div id="historicalParams">
-                             <label class="font-semibold text-gray-700">Historical Parameters</label>
+                             <label class="font-semibold text-gray-700 dark:text-gray-300">Historical Parameters</label>
                              <div class="input-group mt-2">
                                 <label for="stockAllocation">
                                     Stock / Bond Allocation (%)
@@ -658,13 +675,13 @@
                                  </div>
                                  <div class="text-center font-medium mt-1"><span id="stockAllocationValue">60</span>% / <span id="bondAllocationValue">40</span>%</div>
                              </div>
-                             <p class="text-sm text-gray-600">Based on S&P 500 & 10-Yr Treasury data from 1928-2023.</p>
+                             <p class="text-sm text-gray-600 dark:text-gray-400">Based on S&P 500 & 10-Yr Treasury data from 1928-2023.</p>
                         </div>
                     </div>
                 </div>
                  <!-- Row 2: Spending Flexibility -->
-                <div class="mt-6 pt-4 border-t border-gray-200">
-                    <label class="font-semibold text-gray-700">5. Spending Flexibility (Optional)</label>
+                <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
+                    <label class="font-semibold text-gray-700 dark:text-gray-300">5. Spending Flexibility (Optional)</label>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 mt-2">
                          <div class="input-group">
                             <label for="flexThreshold">Reduce spending if portfolio drops below initial value by:</label>
@@ -690,7 +707,7 @@
                     <div class="sim-results-card"><h3>Years w/ Reduced Spending</h3><p id="simFlexYears" class="value"></p><p class="desc">Median number of years spending was cut.</p></div>
                 </div>
             </div>
-            <div id="simulationPlotContainer" class="mb-8 w-full max-w-4xl mx-auto bg-white p-2 rounded shadow"></div> 
+            <div id="simulationPlotContainer" class="mb-8 w-full max-w-4xl mx-auto bg-white dark:bg-gray-800 p-2 rounded shadow"></div> 
             <div id="simulationWarning" class="text-center text-amber-700 mt-4 hidden"></div>
         </div>
 
@@ -705,10 +722,10 @@
         </div>
 
 
-        <footer class="mt-12 pt-6 border-t border-gray-300 text-center text-sm text-gray-500">
+        <footer class="mt-12 pt-6 border-t border-gray-300 dark:border-gray-600 text-center text-sm text-gray-500 dark:text-gray-400">
 
             <div class="mb-8">
-                <h4 class="font-semibold text-gray-700 text-base mb-3">From the Blog & Case Studies</h4>
+                <h4 class="font-semibold text-gray-700 dark:text-gray-300 text-base mb-3">From the Blog & Case Studies</h4>
                 <a href="/guide" class="text-blue-600 underline hover:text-blue-800">
                     FIRE Calculator Guide: How to Plan Financial Independence &amp; Early Retirement
                 </a><br>
@@ -722,19 +739,28 @@
                     The $148,000 Decision: A Deep Dive into the "One More Year" FIRE Strategy
                 </a>
                 </div>
-            <div class="mt-8 pt-8 border-t border-gray-200 non-printable">
-                 <p class="text-sm text-gray-600 mb-2">If you found this calculator helpful, consider supporting its development:</p>
+            <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-600 non-printable">
+                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">If you found this calculator helpful, consider supporting its development:</p>
                  <a href='https://www.buymeacoffee.com/theficalculator' target='_blank' class='inline-block'>
                      <img height='40' style='border:0px;height:40px;' src='https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png' border='0' alt='Buy Me A Coffee' />
                  </a>
             </div>
-<div class="max-w-2xl mx-auto mt-12 pt-8 border-t border-gray-200 text-left non-printable">
+<div class="max-w-2xl mx-auto mt-12 pt-8 border-t border-gray-200 dark:border-gray-600 text-left non-printable">
     <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Latest Updates</h4>
     <ul class="space-y-3">
         <li class="flex items-start">
             <span class="shrink-0 h-2 w-2 mt-1.5 rounded-full bg-green-500 mr-3 animate-pulse"></span>
             <div>
-                <p class="text-sm font-medium text-gray-700">Coast FIRE — Major Improvements</p>
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Dark Mode & Auto-Save</p>
+                <p class="text-xs text-gray-500">Dark mode toggle added. Your inputs now auto-save to localStorage so you never lose your plan.</p>
+            </div>
+            <span class="ml-auto text-xs text-gray-400">Apr 18, 2026</span>
+        </li>
+
+        <li class="flex items-start">
+            <span class="shrink-0 h-2 w-2 mt-1.5 rounded-full bg-gray-300 mr-3"></span>
+            <div>
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Coast FIRE — Major Improvements</p>
                 <p class="text-xs text-gray-500">Now shows the actual date you can stop saving, when your FIRE number is truly hit during coasting, and a full pre-coast + coasting table breakdown. Retirement simulation also works in Coast mode.</p>
             </div>
             <span class="ml-auto text-xs text-gray-400">Apr 12, 2026</span>
@@ -743,7 +769,7 @@
         <li class="flex items-start">
             <span class="shrink-0 h-2 w-2 mt-1.5 rounded-full bg-gray-300 mr-3"></span>
             <div>
-                <p class="text-sm font-medium text-gray-700">AI Retirement Bot — Updated</p>
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">AI Retirement Bot — Updated</p>
                 <p class="text-xs text-gray-500">Now models the true cost of daily habits, market crash scenarios, and major life events conversationally.</p>
             </div>
             <span class="ml-auto text-xs text-gray-400">Mar 30, 2026</span>
@@ -752,7 +778,7 @@
         <li class="flex items-start">
             <span class="shrink-0 h-2 w-2 mt-1.5 rounded-full bg-gray-300 mr-3"></span>
             <div>
-                <p class="text-sm font-medium text-gray-700">AI Retirement Bot Launched</p>
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">AI Retirement Bot Launched</p>
                 <p class="text-xs text-gray-500">AI-powered advisor to help interpret your results and run scenarios.</p>
             </div>
             <span class="ml-auto text-xs text-gray-400">Mar 16, 2026</span>
@@ -761,7 +787,7 @@
         <li class="flex items-start">
             <span class="shrink-0 h-2 w-2 mt-1.5 rounded-full bg-gray-300 mr-3"></span>
             <div>
-                <p class="text-sm font-medium text-gray-700">CAD Currency Support</p>
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">CAD Currency Support</p>
                 <p class="text-xs text-gray-500">Added Canadian Dollar (CAD) option to the currency selector.</p>
             </div>
             <span class="ml-auto text-xs text-gray-400">Jan 31, 2026</span>
@@ -770,14 +796,14 @@
         <li class="flex items-start">
             <span class="shrink-0 h-2 w-2 mt-1.5 rounded-full bg-gray-300 mr-3"></span>
             <div>
-                <p class="text-sm font-medium text-gray-700">Time-Cost Translator Added</p>
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Time-Cost Translator Added</p>
                 <p class="text-xs text-gray-500">New tool to calculate how purchases delay your FIRE date.</p>
             </div>
             <span class="ml-auto text-xs text-gray-400">Dec 28, 2025</span>
         </li>
     </ul>
 </div>
-            <div class="mt-8 pt-8 border-t border-gray-200">
+            <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-600">
                 <p>
                     &copy; <span id="currentYear"></span> The FI Calculator. Licensed under 
                     <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer" class="underline hover:text-blue-500">CC BY-NC-SA 4.0</a>
@@ -825,7 +851,7 @@
         <div class="modal-content">
             <span id="closeFeedbackModal" class="close-button">&times;</span>
             <h3 class="text-xl font-semibold text-gray-800 mb-4">Submit Feedback</h3>
-            <p class="text-sm text-gray-600 mb-4">Have a suggestion or found a bug? I'd love to hear from you!</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Have a suggestion or found a bug? I'd love to hear from you!</p>
             
             <form id="feedbackForm" action="https://formspree.io/f/xeokgnpe" method="POST">
                 <div class="input-group">
